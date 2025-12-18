@@ -66,11 +66,12 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 
 1. **Download** `Common_Dispatch.html`
 2. **Open** the file in Chrome or Edge
-3. **Click** the plug icon on a resource card to connect your KV4P-HT
-4. **Select** the serial port when prompted
-5. **Configure** frequency, CTCSS, and other settings via the gear icon
-6. **Click** the resource card to select it (purple highlight)
-7. **Hold** the PTT button or press your configured PTT key to transmit
+3. **Click** add resource
+4. **Configure** frequency, CTCSS, other settings, and press save resource
+5. **Click** the edit resource button on the resource card
+6. **Select** Connect to KV4P-HT and select the desired serial port when prompted
+7. **Click** the resource card to select it (purple highlight)
+8. **Hold** the PTT button or press your configured PTT key to transmit
 
 ## Usage Tips
 
@@ -85,8 +86,8 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Click the link icon again to remove the patch
 
 ### Recording Transmissions
-- Click the record button during active RX/TX to save audio
-- Recordings saved as WebM files with timestamps
+- Click the download button next to the desired RX/TX to save audio
+- Recordings saved as WAV files with timestamps
 
 ### Emergency Alerts
 - Configure emergency trigger DTMF code in settings (e.g., "911")
@@ -105,7 +106,6 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - **Clock**: Show/hide, 12/24 hour format
 - **Selected/Unselected Volume**: Default volume levels
 - **Console ID**: DTMF string sent with transmissions
-- **Emergency Trigger**: DTMF code that triggers emergency alert
 
 ### Resource Settings (Gear Icon on Resource Card)
 - **Name**: Display name for the resource
