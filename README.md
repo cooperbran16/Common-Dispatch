@@ -30,7 +30,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 
 ### Advanced Features
 - Channel patching (link two resources for cross-band repeat/rebroadcast)
-- Activity logging with transmission recording (WebM format)
+- Activity logging with transmission recording (WAV format)
 - CTCSS tone support for encode/decode
 - Configurable squelch levels
 - Mute unselected resources option
@@ -122,9 +122,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 ## Known Limitations
 
 - Web Serial API requires Chrome, Edge, or Opera (Firefox/Safari not supported)
-- Browser must remain open and in focus for reliable operation
 - USB serial connection required (no network/remote operation)
-- Single browser tab per KV4P-HT device
 
 ## Troubleshooting
 
