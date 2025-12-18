@@ -64,7 +64,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 
 ## Quick Start
 
-1. **Download** `Common_Dispatch_Console.html`
+1. **Download** `Common_Dispatch.html`
 2. **Open** the file in Chrome or Edge
 3. **Click** the plug icon on a resource card to connect your KV4P-HT
 4. **Select** the serial port when prompted
