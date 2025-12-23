@@ -113,6 +113,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - **Tone Mode**: None (CSQ), CTCSS encode/decode
 - **Squelch**: 0-8 (0 = open, 8 = tight)
 - **Power**: High/Low
+- **Bandwidth**: Narrow (12.5 kHz) or Wide (25 kHz)
 
 ### Import/Export
 - Export your complete configuration (resources, aliases, pages, settings) as JSON
