@@ -856,6 +856,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </div>
                     </div>
 
+                    <!-- Bandwidth -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Bandwidth</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="bandwidth" id="bandwidthNarrow" value="narrow" checked
+                                    class="w-4 h-4 text-primary focus:ring-primary cursor-pointer">
+                                <span class="ml-2 text-sm">Narrow (12.5 kHz)</span>
+                            </label>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="bandwidth" id="bandwidthWide" value="wide"
+                                    class="w-4 h-4 text-primary focus:ring-primary cursor-pointer">
+                                <span class="ml-2 text-sm">Wide (25 kHz)</span>
+                            </label>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Narrow for most amateur/FRS; Wide for GMRS main channels</p>
+                    </div>
+
                     <!-- Serial Connection -->
                     <div class="border-t border-gray-300 dark:border-gray-600 pt-4">
                         <label class="block text-sm font-medium mb-2">Serial Connection</label>
@@ -1141,6 +1159,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Tone Type:</strong> CSQ (Carrier Squelch) opens on any signal. CTCSS requires a matching sub-audible tone to open squelch.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Squelch Sensitivity:</strong> Adjusts how strong a signal must be to open squelch (0 = most sensitive, 8 = least sensitive).</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Transmit Power:</strong> High or Low power output.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Bandwidth:</strong> Narrow (12.5 kHz) for most amateur and FRS channels. Wide (25 kHz) for GMRS main channels. Using the wrong bandwidth may cause audio distortion or reduced range.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Important: When adding a new resource, you must save it first, then re-open the resource editor by clicking the edit button, and then click "Connect to KV4P-HT" to establish the serial connection.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">To edit an existing resource, click the pencil icon on the resource card. The Delete Resource option is available at the bottom of the edit dialog.</p>
                         </div>
@@ -1342,7 +1361,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <div id="help-about" class="hidden px-3 pb-3">
                             <div class="text-center mb-4">
                                 <h3 class="text-lg font-bold text-primary">Common Dispatch Console</h3>
-                                <p class="text-sm text-gray-500">Version 2.28</p>
+                                <p class="text-sm text-gray-500">Version 2.29</p>
                             </div>
                             
                             <div class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
@@ -4513,15 +4532,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         
         const squelch = resource.squelchLevel || 1; // Default to 1
         
-        // Build binary struct
-        view.setUint8(0, 0);                    // bw: 0 = 12.5kHz (narrowband)
-        view.setFloat32(1, freq_tx, true);      // freq_tx (little-endian)
-        view.setFloat32(5, freq_rx, true);      // freq_rx (little-endian)
-        view.setUint8(9, ctcssIndex);           // ctcss_tx
-        view.setUint8(10, squelch);             // squelch (0-8)
-        view.setUint8(11, ctcssIndex);          // ctcss_rx
+        // Bandwidth: 0 = narrow (12.5kHz), 1 = wide (25kHz)
+        const bandwidth = resource.bandwidth === 'wide' ? 1 : 0;
         
-        console.log(`GROUP cmd [Resource ${resource.id}]: TX=${freq_tx}MHz, RX=${freq_rx}MHz, CTCSS=${ctcssIndex}, SQ=${squelch}`);
+        // Build binary struct
+        view.setUint8(0, bandwidth);                // bw: 0 = narrow, 1 = wide
+        view.setFloat32(1, freq_tx, true);          // freq_tx (little-endian)
+        view.setFloat32(5, freq_rx, true);          // freq_rx (little-endian)
+        view.setUint8(9, ctcssIndex);               // ctcss_tx
+        view.setUint8(10, squelch);                 // squelch (0-8)
+        view.setUint8(11, ctcssIndex);              // ctcss_rx
+        
+        console.log(`GROUP cmd [Resource ${resource.id}]: TX=${freq_tx}MHz, RX=${freq_rx}MHz, CTCSS=${ctcssIndex}, SQ=${squelch}, BW=${bandwidth === 0 ? 'narrow' : 'wide'}`);
         
         await sendSerialPacket(COMMAND_HOST_GROUP, paramBuffer, resource.id);
     }
@@ -5689,6 +5711,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         document.getElementById('squelchLevel').value = '4';
         document.getElementById('squelchValue').textContent = '4';
         document.getElementById('txPowerHigh').checked = true;  // Default to high power
+        document.getElementById('bandwidthNarrow').checked = true;  // Default to narrow
         updateOperationModeFields();
         updateToneFields();
         document.getElementById('resourceConnectionInfo').innerHTML = '<span class="text-gray-500">Status: Not Connected</span>';
@@ -5716,6 +5739,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             document.getElementById('txPowerLow').checked = true;
         } else {
             document.getElementById('txPowerHigh').checked = true;
+        }
+        
+        // Set bandwidth radio buttons
+        if (resource.bandwidth === 'wide') {
+            document.getElementById('bandwidthWide').checked = true;
+        } else {
+            document.getElementById('bandwidthNarrow').checked = true;
         }
 
         updateOperationModeFields();
@@ -5748,7 +5778,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             transmitFrequency: mode === 'half-duplex' ? parseFloat(document.getElementById('transmitFrequency').value) : null,
             ctcssTone: toneType === 'ctcss' ? document.getElementById('ctcssCode').value : null,
             squelchLevel: parseInt(document.getElementById('squelchLevel').value),
-            txPower: document.querySelector('input[name="txPower"]:checked').value
+            txPower: document.querySelector('input[name="txPower"]:checked').value,
+            bandwidth: document.querySelector('input[name="bandwidth"]:checked').value
         };
 
         const editingId = document.getElementById('editingResourceId').value;
@@ -5989,7 +6020,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     function exportConfiguration() {
         const config = {
-            version: 'v2.28',
+            version: 'v2.29',
             exportDate: new Date().toISOString(),
             consoleName,
             currentTheme,
@@ -6019,6 +6050,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 ctcssTone: r.ctcssTone,
                 squelchLevel: r.squelchLevel,
                 txPower: r.txPower || 'high',
+                bandwidth: r.bandwidth || 'narrow',
                 volume: r.volume,
                 selected: r.selected,
                 priority: r.priority,
@@ -6313,6 +6345,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 ctcssTone: r.ctcssTone,
                 squelchLevel: r.squelchLevel,
                 txPower: r.txPower || 'high',
+                bandwidth: r.bandwidth || 'narrow',
                 volume: r.volume,
                 selected: r.selected,
                 priority: r.priority,
@@ -6546,7 +6579,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         renderResources();
         renderPages();
 
-        console.log('Common Dispatch Console v2.28 initialized');
+        console.log('Common Dispatch Console v2.29 initialized');
     });
     </script>
 </body>
