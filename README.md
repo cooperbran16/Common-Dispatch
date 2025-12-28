@@ -35,7 +35,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Configurable squelch levels
 - Mute unselected resources option
 - Light/Dark theme support
-- - **Stack Light Support** - Connect an AndonStack for physical RGB status indication
+- Stack Light Support - Connect an AndonStack for physical RGB status indication
 
 ### User Experience
 - Clean, responsive interface
