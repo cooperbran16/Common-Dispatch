@@ -51,7 +51,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
   - VHF version (SA818-V) for 134-174 MHz
   - UHF version (SA818-U) for 400-480 MHz
 - USB connection to computer
-- ## Optional Hardware: AndonStack
+- Optional Hardware: AndonStack
 
 AndonStack is a physical RGB stack light that provides visual status indication for your dispatch console:
 
