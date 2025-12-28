@@ -35,6 +35,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Configurable squelch levels
 - Mute unselected resources option
 - Light/Dark theme support
+- - **Stack Light Support** - Connect an AndonStack for physical RGB status indication
 
 ### User Experience
 - Clean, responsive interface
@@ -50,6 +51,20 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
   - VHF version (SA818-V) for 134-174 MHz
   - UHF version (SA818-U) for 400-480 MHz
 - USB connection to computer
+- ## Optional Hardware: AndonStack
+
+AndonStack is a physical RGB stack light that provides visual status indication for your dispatch console:
+
+- 🟢 **Green** - Receiving audio on selected resource
+- 🟡 **Yellow** - Transmitting (voice, alert tones, pages)
+- 🔴 **Red** - Emergency alert or priority tone
+
+Build instructions, firmware, and BOM: [AndonStack Repository](https://github.com/cooperbran16/AndonStack)
+
+**To connect:**
+1. Enable "Stack Light" in Settings
+2. Click the Stack Light Settings button
+3. Click "Connect to Stack Light" and select the ESP32-C3 serial port
 
 ### Software
 - Modern web browser with Web Serial API support:
