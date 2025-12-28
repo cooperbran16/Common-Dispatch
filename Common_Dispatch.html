@@ -523,6 +523,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </label>
                     </div>
 
+                    <!-- Stack Light Toggle -->
+                    <div>
+                        <label class="flex items-center justify-between cursor-pointer">
+                            <span class="text-sm font-medium">Enable Stack Light</span>
+                            <input type="checkbox" id="stackLightToggle"
+                                onchange="toggleStackLightSettings()"
+                                class="w-5 h-5 text-primary rounded focus:ring-primary cursor-pointer">
+                        </label>
+                        <div id="stackLightSettingsBtn" class="hidden mt-2">
+                            <button type="button" onclick="showModal('stackLightModal')"
+                                class="w-full p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors flex items-center justify-center">
+                                <i class="fas fa-cog mr-2"></i>Stack Light Settings
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- PTT Keybinding -->
                     <div>
                         <label class="block text-sm font-medium mb-2">General Transmit (PTT) Key</label>
@@ -1019,6 +1035,90 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     </div>
 
+    <!-- Stack Light Modal -->
+    <div id="stackLightModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto modal-content">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold"><i class="fas fa-lightbulb mr-2 text-yellow-500"></i>Stack Light Settings</h2>
+                    <button onclick="hideModal('stackLightModal')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Connection Section -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2">Serial Connection</label>
+                    <button type="button" onclick="connectStackLight()"
+                        class="w-full p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+                        <i class="fas fa-plug mr-2"></i>Connect to Stack Light
+                    </button>
+                    <div id="stackLightConnectionInfo" class="text-sm mt-2 text-center">
+                        <span class="text-gray-500">Status: Not Connected</span>
+                    </div>
+                </div>
+
+                <!-- Light Function Reference -->
+                <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                        <i class="fas fa-info-circle mr-2"></i>Light Functions
+                    </h3>
+                    
+                    <!-- Stack Light Visual -->
+                    <div class="flex items-start space-x-4 mb-4">
+                        <!-- Stack Light Image -->
+                        <div class="flex flex-col items-center space-y-1">
+                            <div class="w-12 h-12 rounded-full bg-red-500 shadow-lg shadow-red-500/50 flex items-center justify-center">
+                                <i class="fas fa-circle text-red-300 text-xs"></i>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-yellow-500 shadow-lg shadow-yellow-500/50 flex items-center justify-center">
+                                <i class="fas fa-circle text-yellow-300 text-xs"></i>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-green-500 shadow-lg shadow-green-500/50 flex items-center justify-center">
+                                <i class="fas fa-circle text-green-300 text-xs"></i>
+                            </div>
+                            <div class="w-8 h-4 bg-gray-400 dark:bg-gray-600 rounded"></div>
+                        </div>
+                        
+                        <!-- Function Descriptions -->
+                        <div class="flex-1 space-y-3 text-sm">
+                            <div class="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg border-l-4 border-red-500">
+                                <div class="font-semibold text-red-700 dark:text-red-400">Red Light</div>
+                                <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">
+                                    <strong>Solid:</strong> Unacknowledged emergency alert<br>
+                                    <strong>On during tone:</strong> Priority tone transmitting
+                                </div>
+                            </div>
+                            <div class="p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border-l-4 border-yellow-500">
+                                <div class="font-semibold text-yellow-700 dark:text-yellow-400">Yellow Light</div>
+                                <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">
+                                    <strong>Solid:</strong> Transmitting (voice, alert tone, 2-tone page, or DTMF page)
+                                </div>
+                            </div>
+                            <div class="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg border-l-4 border-green-500">
+                                <div class="font-semibold text-green-700 dark:text-green-400">Green Light</div>
+                                <div class="text-gray-600 dark:text-gray-400 text-xs mt-1">
+                                    <strong>Solid:</strong> Receiving audio on any selected resource
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs text-gray-500 mt-3">
+                        <i class="fas fa-lightbulb mr-1"></i>
+                        Multiple lights can be active simultaneously. The stack light will automatically sync with console activity.
+                    </p>
+                </div>
+
+                <!-- Close Button -->
+                <button onclick="hideModal('stackLightModal')" 
+                    class="w-full p-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors mt-4">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Help Modal -->
     <div id="helpModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto modal-content">
@@ -1352,6 +1452,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </div>
                     </div>
 
+                    <!-- Stack Light -->
+                    <div class="help-topic border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <button onclick="toggleHelpTopic('help-stacklight')" class="w-full flex justify-between items-center p-3 text-left font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg">
+                            <span>Stack Light (AndonStack)</span>
+                            <i id="help-stacklight-icon" class="fas fa-caret-right text-gray-400"></i>
+                        </button>
+                        <div id="help-stacklight" class="hidden px-3 pb-3">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">The optional AndonStack is a physical stack light that provides visual status indication for the dispatch console. It uses an ESP32-C3 microcontroller with WS2812B NeoPixel LED rings.</p>
+                            
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-3"><strong>Light Functions:</strong></p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Green (solid):</strong> Receiving audio on any selected resource.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Yellow (solid):</strong> Transmitting - voice, alert tone, 2-tone page, or DTMF page on any resource.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Red (solid):</strong> Unacknowledged emergency alert active.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Red (on during tone):</strong> Priority tone actively transmitting. Light turns on only while the tone audio is playing.</p>
+                            
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-3"><strong>Setup:</strong></p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">1. Enable "Stack Light" in Settings.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">2. Click the Stack Light Settings button that appears.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">3. Click "Connect to Stack Light" and select the ESP32-C3 serial port.</p>
+                            
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-3"><strong>Note:</strong> Multiple lights can be active simultaneously (e.g., green + yellow when receiving on one resource while transmitting on another).</p>
+                        </div>
+                    </div>
+
                     <!-- About -->
                     <div class="help-topic border border-primary/30 rounded-lg bg-primary/5">
                         <button onclick="toggleHelpTopic('help-about')" class="w-full flex justify-between items-center p-3 text-left font-medium hover:bg-primary/10 rounded-lg">
@@ -1361,7 +1485,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <div id="help-about" class="hidden px-3 pb-3">
                             <div class="text-center mb-4">
                                 <h3 class="text-lg font-bold text-primary">Common Dispatch Console</h3>
-                                <p class="text-sm text-gray-500">Version 2.29</p>
+                                <p class="text-sm text-gray-500">Version 2.30</p>
                             </div>
                             
                             <div class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
@@ -1586,6 +1710,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     let consoleName = "Common Dispatch";
     let showRssi = true;
 
+    // Stack Light
+    let stackLightEnabled = false;
+    let stackLightPort = null;
+    let stackLightWriter = null;
+    let stackLightReader = null;
+    let stackLightConnected = false;
+    let stackLightPollInterval = null;
+    let priorityTonePlaying = false;
+    const STACK_LIGHT_CMD_STATUS_REQUEST = 0xFF;
+    const STACK_LIGHT_CMD_STATUS_RESPONSE = 0xFE;
+    const STACK_LIGHT_OFF = 0x00;
+    const STACK_LIGHT_SOLID = 0x01;
+    const STACK_LIGHT_BLINK = 0x02;
+
     // Console ID
     let consoleIdEnabled = false;
     let consoleIdString = '';
@@ -1645,7 +1783,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     let resourceDtmfDecoders = new Map();
 
     // Modal tracking for PTT keybind
-    const modalIds = ['settingsModal', 'aliasesModal', 'aliasEditModal', 'emergencyModal', 'resourceModal', 'pageModal', 'confirmModal', 'errorModal', 'helpModal'];
+    const modalIds = ['settingsModal', 'aliasesModal', 'aliasEditModal', 'emergencyModal', 'resourceModal', 'pageModal', 'confirmModal', 'errorModal', 'helpModal', 'stackLightModal'];
 
     // ============================================================================
     // DTMF DECODER CLASS (Goertzel Algorithm)
@@ -2831,11 +2969,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             // Add this resource to active TX for the tone routing
             activeTxIds.push(resourceId);
             
+            // Set priority tone playing flag for stack light
+            priorityTonePlaying = true;
+            updateStackLight();
+            
             // Play the tone (will route through TX pipeline)
             generateTone(675, 0.75, 0.25, 'sine', true);
             
             // Wait for tone to complete plus small buffer
             await delay(800);
+            
+            // Clear priority tone flag
+            priorityTonePlaying = false;
+            updateStackLight();
             
             // Unkey the radio
             await sendSerialPacket(COMMAND_HOST_PTT_UP, null, resourceId);
@@ -2854,15 +3000,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             resetVuMeter();
             
             renderResources();
+            
+            // Update stack light after full cleanup
+            updateStackLight();
         } catch (e) {
             console.error('Failed to transmit priority tone:', e);
             // Cleanup on error
+            priorityTonePlaying = false;
             unmuteMicForTones();
             activeTxIds = activeTxIds.filter(id => id !== resourceId);
             resource.busy = false;
             resource.recordingType = null;
             resetVuMeter();
             renderResources();
+            updateStackLight();
         }
     }
 
@@ -3539,6 +3690,177 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             }
         });
     }
+
+    // ============================================================================
+    // STACK LIGHT FUNCTIONS
+    // ============================================================================
+
+    function toggleStackLightSettings() {
+        const toggle = document.getElementById('stackLightToggle');
+        const settingsBtn = document.getElementById('stackLightSettingsBtn');
+        stackLightEnabled = toggle.checked;
+        
+        if (stackLightEnabled) {
+            settingsBtn.classList.remove('hidden');
+        } else {
+            settingsBtn.classList.add('hidden');
+            disconnectStackLight();
+        }
+        saveToLocalStorage();
+    }
+
+    async function connectStackLight() {
+        try {
+            stackLightPort = await navigator.serial.requestPort();
+            await stackLightPort.open({ baudRate: 115200 });
+            
+            stackLightWriter = stackLightPort.writable.getWriter();
+            stackLightReader = stackLightPort.readable.getReader();
+            stackLightConnected = true;
+            
+            // Update UI
+            document.getElementById('stackLightConnectionInfo').innerHTML = 
+                '<span class="text-green-500"><i class="fas fa-check-circle mr-1"></i>Connected</span>';
+            
+            // Start polling for status requests from the stack light
+            startStackLightPolling();
+            
+            // Start listening for poll requests from stack light
+            readStackLightSerial();
+            
+            console.log('Stack light connected');
+        } catch (error) {
+            console.error('Stack light connection failed:', error);
+            document.getElementById('stackLightConnectionInfo').innerHTML = 
+                '<span class="text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>Connection failed</span>';
+        }
+    }
+
+    function disconnectStackLight() {
+        if (stackLightPollInterval) {
+            clearInterval(stackLightPollInterval);
+            stackLightPollInterval = null;
+        }
+        
+        if (stackLightWriter) {
+            stackLightWriter.releaseLock();
+            stackLightWriter = null;
+        }
+        if (stackLightReader) {
+            stackLightReader.cancel();
+            stackLightReader.releaseLock();
+            stackLightReader = null;
+        }
+        if (stackLightPort) {
+            stackLightPort.close().catch(() => {});
+            stackLightPort = null;
+        }
+        
+        stackLightConnected = false;
+        
+        const infoEl = document.getElementById('stackLightConnectionInfo');
+        if (infoEl) {
+            infoEl.innerHTML = '<span class="text-gray-500">Status: Not Connected</span>';
+        }
+    }
+
+    function startStackLightPolling() {
+        // Clear any existing interval
+        if (stackLightPollInterval) {
+            clearInterval(stackLightPollInterval);
+        }
+        
+        // No need to poll from console side - the stack light polls us
+        // We just need to be ready to respond
+    }
+
+    async function readStackLightSerial() {
+        if (!stackLightReader) return;
+        
+        try {
+            while (stackLightConnected) {
+                const { value, done } = await stackLightReader.read();
+                if (done) break;
+                
+                // Debug: log received bytes
+                console.log('Stack light received bytes:', Array.from(value).map(b => '0x' + b.toString(16).padStart(2, '0')));
+                
+                // Check for status request from stack light
+                for (let byte of value) {
+                    if (byte === STACK_LIGHT_CMD_STATUS_REQUEST) {
+                        // Stack light is asking for current status - send it
+                        console.log('Stack light poll received (0xFF), sending status...');
+                        sendStackLightStatus();
+                    }
+                }
+            }
+        } catch (error) {
+            if (stackLightConnected) {
+                console.error('Stack light read error:', error);
+                disconnectStackLight();
+            }
+        }
+    }
+
+    function getStackLightState() {
+        // Green: Receiving on any selected resource
+        let greenState = STACK_LIGHT_OFF;
+        const anySelectedReceiving = resources.some(r => 
+            r.selected && r.busy && r.recordingType === 'rx'
+        );
+        if (anySelectedReceiving) {
+            greenState = STACK_LIGHT_SOLID;
+        }
+        
+        // Yellow: Any transmitting (voice, alert tones, 2-tone, DTMF page)
+        // Exclude priority tone - that's red only, not yellow
+        let yellowState = STACK_LIGHT_OFF;
+        const anyResourceTransmitting = resources.some(r => 
+            r.busy && r.recordingType === 'tx'
+        );
+        // Only show yellow if NOT in priority tone mode
+        if (!priorityTonePlaying && (activeTxIds.length > 0 || isTransmittingPages || alertTone1Playing || alertTone2Playing || anyResourceTransmitting)) {
+            yellowState = STACK_LIGHT_SOLID;
+        }
+        
+        // Red: Unacknowledged emergency (solid) or priority tone playing (on during tone)
+        let redState = STACK_LIGHT_OFF;
+        const unacknowledgedCount = emergencyEvents.filter(e => !e.acknowledged).length;
+        if (unacknowledgedCount > 0) {
+            redState = STACK_LIGHT_SOLID;  // Emergency overrides everything
+        } else if (priorityTonePlaying) {
+            redState = STACK_LIGHT_SOLID;  // On while tone is playing
+        }
+        
+        return { green: greenState, yellow: yellowState, red: redState };
+    }
+
+    async function sendStackLightStatus() {
+        if (!stackLightConnected || !stackLightWriter) return;
+        
+        try {
+            const state = getStackLightState();
+            const data = new Uint8Array([
+                STACK_LIGHT_CMD_STATUS_RESPONSE,
+                state.green,
+                state.yellow,
+                state.red
+            ]);
+            console.log('Sending to stack light:', Array.from(data).map(b => '0x' + b.toString(16).padStart(2, '0')), 
+                        '(G:', state.green, 'Y:', state.yellow, 'R:', state.red, ')');
+            await stackLightWriter.write(data);
+        } catch (error) {
+            console.error('Stack light write error:', error);
+        }
+    }
+
+    // Call this whenever state changes that affects the stack light
+    function updateStackLight() {
+        if (stackLightConnected) {
+            sendStackLightStatus();
+        }
+    }
+
     // ============================================================================
     // TRANSMIT FUNCTIONS
     // ============================================================================
@@ -3626,6 +3948,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         renderResources();
         document.getElementById('generalTransmitBtn').classList.add('transmit-active');
+        
+        // Update stack light for TX state
+        updateStackLight();
     }
 
     async function stopTransmit() {
@@ -3708,6 +4033,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         renderResources();
         document.getElementById('generalTransmitBtn').classList.remove('transmit-active');
         
+        // Update stack light for TX state
+        updateStackLight();
+        
         // Check for any queued priority tones
         setTimeout(() => {
             resources.forEach(resource => {
@@ -3767,6 +4095,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         }
 
         renderResources();
+        
+        // Update stack light for TX state
+        updateStackLight();
     }
 
     // ============================================================================
@@ -3803,6 +4134,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             oscillator.start();
             alertTone1Oscillator = { oscillator, gainNode };
         }
+        
+        // Update stack light for TX state
+        updateStackLight();
     }
 
     async function stopAlertTone1() {
@@ -3827,6 +4161,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         if (isTransmittingPages && !alertTone2Playing) {
             await stopTransmit();
         }
+        
+        // Update stack light for TX state
+        updateStackLight();
     }
 
     async function startAlertTone2() {
@@ -3850,6 +4187,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         playAlternating();
         alertTone2Interval = setInterval(playAlternating, 250);
+        
+        // Update stack light for TX state
+        updateStackLight();
     }
 
     async function stopAlertTone2() {
@@ -3867,6 +4207,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         if (isTransmittingPages && !alertTone1Playing) {
             await stopTransmit();
         }
+        
+        // Update stack light for TX state
+        updateStackLight();
     }
 
     // ============================================================================
@@ -4046,6 +4389,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         await delay(150);
 
         renderResources();
+        
+        // Update stack light for TX state
+        updateStackLight();
+        
         return activeTxIds;
     }
 
@@ -5250,6 +5597,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         startRecording(resourceId, 'rx');
         
+        // Update stack light for RX state change
+        updateStackLight();
+        
         // Throttled render - don't render more than once per 100ms
         throttledRenderResources();
     }
@@ -5381,6 +5731,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             resource.rxTimeout = null;
         }
 
+        // Update stack light for RX state change
+        updateStackLight();
+
         throttledRenderResources();
     }
 
@@ -5478,6 +5831,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         startEmergencyWhoop();
         updateEmergencyUI();
         renderResources();
+        
+        // Update stack light for emergency state
+        updateStackLight();
     }
 
     function updateEmergencyUI() {
@@ -5551,6 +5907,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         updateEmergencyUI();
         renderResources();
+        
+        // Update stack light for emergency state
+        updateStackLight();
     }
 
     function deleteEmergencyEvent(eventId) {
@@ -6020,7 +6379,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     function exportConfiguration() {
         const config = {
-            version: 'v2.29',
+            version: 'v2.30',
             exportDate: new Date().toISOString(),
             consoleName,
             currentTheme,
@@ -6031,6 +6390,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             masterVolume,
             micVolume,
             showRssi,
+            stackLightEnabled,
             pttKey,
             consoleIdEnabled,
             consoleIdString,
@@ -6098,6 +6458,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 if (config.masterVolume !== undefined) masterVolume = config.masterVolume;
                 if (config.micVolume !== undefined) micVolume = config.micVolume;
                 if (config.showRssi !== undefined) showRssi = config.showRssi;
+                if (config.stackLightEnabled !== undefined) stackLightEnabled = config.stackLightEnabled;
                 if (config.pttKey) pttKey = config.pttKey;
                 if (config.consoleIdEnabled !== undefined) consoleIdEnabled = config.consoleIdEnabled;
                 if (config.consoleIdString) consoleIdString = config.consoleIdString;
@@ -6223,6 +6584,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         document.getElementById('unselectedVolumeSlider').value = unselectedVolume;
         document.getElementById('unselectedVolumeValue').textContent = unselectedVolume;
         document.getElementById('showRssiToggle').checked = showRssi;
+        document.getElementById('stackLightToggle').checked = stackLightEnabled;
+        document.getElementById('stackLightSettingsBtn').classList.toggle('hidden', !stackLightEnabled);
         document.getElementById('enableConsoleIdToggle').checked = consoleIdEnabled;
         document.getElementById('consoleIdString').value = consoleIdString;
         document.getElementById('consoleIdTiming').value = consoleIdTiming;
@@ -6326,6 +6689,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             masterVolume,
             micVolume,
             showRssi,
+            stackLightEnabled,
             pttKey,
             consoleIdEnabled,
             consoleIdString,
@@ -6379,6 +6743,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             masterVolume = data.masterVolume ?? masterVolume;
             micVolume = data.micVolume ?? micVolume;
             showRssi = data.showRssi ?? showRssi;
+            stackLightEnabled = data.stackLightEnabled ?? stackLightEnabled;
             pttKey = data.pttKey || pttKey;
             consoleIdEnabled = data.consoleIdEnabled ?? consoleIdEnabled;
             consoleIdString = data.consoleIdString || consoleIdString;
@@ -6579,7 +6944,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         renderResources();
         renderPages();
 
-        console.log('Common Dispatch Console v2.29 initialized');
+        console.log('Common Dispatch Console v2.30 initialized');
     });
     </script>
 </body>
