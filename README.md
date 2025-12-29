@@ -122,7 +122,7 @@ Build instructions, firmware, and BOM: [AndonStack Repository](https://github.co
 - **Selected/Unselected Volume**: Default volume levels
 - **Console ID**: DTMF string sent with transmissions
 
-### Resource Settings (Gear Icon on Resource Card)
+### Resource Settings (Edit Icon on Resource Card)
 - **Name**: Display name for the resource
 - **Frequency**: TX/RX frequency in MHz
 - **Tone Mode**: None (CSQ), CTCSS encode/decode
