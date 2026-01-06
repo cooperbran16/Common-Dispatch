@@ -176,7 +176,7 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 ## Links
 
 - [KV4P-HT Project](https://github.com/VanceVagell/kv4p-ht)
-- [KV4P-HT Discord](https://discord.gg/kv4p-ht)
+- [KV4P-HT Discord](https://discord.gg/WKTEhuEZhp)
 - [GNU GPL-3.0 License](https://www.gnu.org/licenses/gpl-3.0.html)
 
 ---
