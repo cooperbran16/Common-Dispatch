@@ -1035,6 +1035,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                        <i class="fas fa-check text-green-500 dark:text-green-400"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-green-600 dark:text-green-400 mb-2" id="successTitle">Success</h3>
+                        <p class="text-gray-600 dark:text-gray-400" id="successMessage"></p>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button onclick="hideModal('successModal')"
+                        class="px-6 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg transition-colors">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Stack Light Modal -->
     <div id="stackLightModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto modal-content">
@@ -1407,7 +1430,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <p class="text-sm text-gray-600 dark:text-gray-400">The console monitors all incoming transmissions for emergency activations by detecting a specific DTMF sequence. When detected, the console immediately triggers an emergency alert with audible and visual warnings—no need to wait for the transmission to end.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Configure the emergency trigger DTMF string in the Emergency settings (accessible via the warning triangle icon in the header). For example, setting "911" will trigger an alert whenever that sequence is received. The trigger is detected even when embedded in longer DTMF strings (e.g., "101911" triggers on "911").</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">During an active emergency:</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">• An audible whoop tone plays continuously</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">• An audible emergency tone plays continuously</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400">• The emergency button flashes red with a badge count</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400">• The originating resource card pulses with a red border</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400">• The resource is forced to full volume regardless of other settings</p>
@@ -1485,7 +1508,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <div id="help-about" class="hidden px-3 pb-3">
                             <div class="text-center mb-4">
                                 <h3 class="text-lg font-bold text-primary">Common Dispatch Console</h3>
-                                <p class="text-sm text-gray-500">Version 2.30</p>
+                                <p class="text-sm text-gray-500">Version 2.4</p>
                             </div>
                             
                             <div class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
@@ -1773,8 +1796,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     let emergencyEnabled = true;
     let emergencyTriggerDtmf = '';
     let activeEmergencyResourceIds = new Set();
-    let emergencyWhoopNodes = null;
-    let emergencyWhoopInterval = null;
+    let emergencyToneNodes = [];
+    let emergencyToneScheduler = null;
+    let emergencyToneStartTime = 0;
 
     // Recording
     let activeRecorders = new Map();
@@ -1783,7 +1807,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     let resourceDtmfDecoders = new Map();
 
     // Modal tracking for PTT keybind
-    const modalIds = ['settingsModal', 'aliasesModal', 'aliasEditModal', 'emergencyModal', 'resourceModal', 'pageModal', 'confirmModal', 'errorModal', 'helpModal', 'stackLightModal'];
+    const modalIds = ['settingsModal', 'aliasesModal', 'aliasEditModal', 'emergencyModal', 'resourceModal', 'pageModal', 'confirmModal', 'errorModal', 'successModal', 'helpModal', 'stackLightModal'];
 
     // ============================================================================
     // DTMF DECODER CLASS (Goertzel Algorithm)
@@ -2831,6 +2855,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         showModal('errorModal');
     }
 
+    function showSuccess(title, message) {
+        document.getElementById('successTitle').textContent = title;
+        document.getElementById('successMessage').textContent = message;
+        showModal('successModal');
+    }
+
     // Check if frequency matches module type, returns error message or null if OK
     function checkFrequencyMismatch(resource, moduleType) {
         const freq = resource.frequency;
@@ -3118,58 +3148,137 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     // ============================================================================
     // EMERGENCY WHOOP TONE
     // ============================================================================
+    // EMERGENCY ALERT TONE - Dual Frequency Pulse
+    // Primary: 853 Hz, Secondary: 960 Hz (43% amplitude)
+    // Pattern: pulse (107ms) → gap (47ms) → pulse (107ms) → long gap (247ms) → repeat
+    // ============================================================================
 
     function startEmergencyWhoop() {
-        if (emergencyWhoopNodes) return; // Already playing
+        if (emergencyToneScheduler) return; // Already playing
 
         if (!audioContext) return;
 
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        // Tone parameters
+        const frequency1 = 853;
+        const frequency2 = 960;
+        const mixLevel = 0.43;
+        const volume = 0.35;
+        const pulseDuration = 107; // ms
+        const shortGap = 47; // ms
+        const longGap = 247; // ms
+        const attackTime = 0.005;
+        const releaseTime = 0.005;
 
-        oscillator.connect(gainNode);
-        gainNode.connect(masterGainNode);
+        // Calculate cycle time in seconds
+        const cycleTime = (pulseDuration * 2 + shortGap + longGap) / 1000; // ~0.448 seconds
 
-        oscillator.type = 'sine';
-        gainNode.gain.setValueAtTime(0.35, audioContext.currentTime);
+        emergencyToneStartTime = audioContext.currentTime;
 
-        // Start at 500Hz
-        oscillator.frequency.setValueAtTime(500, audioContext.currentTime);
-        oscillator.start(audioContext.currentTime);
+        // Function to create a single dual-tone pulse
+        function createPulse(startTime) {
+            const durationSec = pulseDuration / 1000;
 
-        emergencyWhoopNodes = { oscillator, gainNode };
+            // Create two oscillators for dual-tone
+            const osc1 = audioContext.createOscillator();
+            const osc2 = audioContext.createOscillator();
+            const gain1 = audioContext.createGain();
+            const gain2 = audioContext.createGain();
 
-        // Create rising whoop pattern
-        const whoopCycle = () => {
-            if (!emergencyWhoopNodes) return;
+            osc1.type = 'sine';
+            osc1.frequency.value = frequency1;
+            osc2.type = 'sine';
+            osc2.frequency.value = frequency2;
 
+            osc1.connect(gain1);
+            osc2.connect(gain2);
+            gain1.connect(masterGainNode);
+            gain2.connect(masterGainNode);
+
+            // Primary envelope
+            gain1.gain.setValueAtTime(0, startTime);
+            gain1.gain.linearRampToValueAtTime(volume, startTime + attackTime);
+            gain1.gain.setValueAtTime(volume, startTime + durationSec - releaseTime);
+            gain1.gain.linearRampToValueAtTime(0, startTime + durationSec);
+
+            // Secondary envelope (scaled by mixLevel)
+            const secondaryVol = volume * mixLevel;
+            gain2.gain.setValueAtTime(0, startTime);
+            gain2.gain.linearRampToValueAtTime(secondaryVol, startTime + attackTime);
+            gain2.gain.setValueAtTime(secondaryVol, startTime + durationSec - releaseTime);
+            gain2.gain.linearRampToValueAtTime(0, startTime + durationSec);
+
+            osc1.start(startTime);
+            osc1.stop(startTime + durationSec + 0.01);
+            osc2.start(startTime);
+            osc2.stop(startTime + durationSec + 0.01);
+
+            emergencyToneNodes.push(
+                { osc: osc1, gain: gain1 },
+                { osc: osc2, gain: gain2 }
+            );
+
+            return durationSec;
+        }
+
+        // Schedule one complete cycle (double-pulse pattern)
+        function scheduleCycle() {
+            if (!emergencyToneScheduler) return;
+
+            // Clean up old nodes that have finished
             const now = audioContext.currentTime;
-            // Rise from 500Hz to 1500Hz over 0.3s, then reset
-            emergencyWhoopNodes.oscillator.frequency.setValueAtTime(500, now);
-            emergencyWhoopNodes.oscillator.frequency.linearRampToValueAtTime(1500, now + 0.3);
-        };
+            emergencyToneNodes = emergencyToneNodes.filter(node => {
+                try {
+                    // Keep nodes that might still be playing
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            });
 
-        whoopCycle();
-        emergencyWhoopInterval = setInterval(whoopCycle, 300);
+            // Schedule ahead by 2 cycles to ensure smooth playback
+            let scheduleTime = emergencyToneStartTime;
+            const scheduleAhead = now + 1.0; // Schedule 1 second ahead
+
+            while (scheduleTime < scheduleAhead) {
+                // First pulse
+                createPulse(scheduleTime);
+                scheduleTime += pulseDuration / 1000;
+                scheduleTime += shortGap / 1000;
+
+                // Second pulse
+                createPulse(scheduleTime);
+                scheduleTime += pulseDuration / 1000;
+                scheduleTime += longGap / 1000;
+            }
+
+            emergencyToneStartTime = scheduleTime;
+        }
+
+        // Initial scheduling
+        scheduleCycle();
+
+        // Continue scheduling every 400ms
+        emergencyToneScheduler = setInterval(scheduleCycle, 400);
     }
 
     function stopEmergencyWhoop() {
-        if (emergencyWhoopInterval) {
-            clearInterval(emergencyWhoopInterval);
-            emergencyWhoopInterval = null;
+        if (emergencyToneScheduler) {
+            clearInterval(emergencyToneScheduler);
+            emergencyToneScheduler = null;
         }
 
-        if (emergencyWhoopNodes) {
-            emergencyWhoopNodes.gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.05);
-            setTimeout(() => {
-                try {
-                    emergencyWhoopNodes.oscillator.stop();
-                    emergencyWhoopNodes.oscillator.disconnect();
-                    emergencyWhoopNodes.gainNode.disconnect();
-                } catch (e) {}
-                emergencyWhoopNodes = null;
-            }, 100);
-        }
+        const now = audioContext ? audioContext.currentTime : 0;
+
+        emergencyToneNodes.forEach(({ osc, gain }) => {
+            try {
+                gain.gain.cancelScheduledValues(now);
+                gain.gain.setValueAtTime(0, now);
+                osc.stop(now + 0.01);
+            } catch (e) {}
+        });
+
+        emergencyToneNodes = [];
+        emergencyToneStartTime = 0;
     }
 
     // ============================================================================
@@ -6379,7 +6488,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     function exportConfiguration() {
         const config = {
-            version: 'v2.30',
+            version: 'v2.4',
             exportDate: new Date().toISOString(),
             consoleName,
             currentTheme,
@@ -6505,11 +6614,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 populateSettingsForm();
 
                 console.log('Configuration imported successfully from:', config.exportDate || 'unknown date');
-                alert('Configuration imported successfully!');
+                showSuccess('Import Complete', 'Configuration imported successfully!');
                 
             } catch (err) {
                 console.error('Failed to import configuration:', err);
-                alert('Failed to import configuration: ' + err.message);
+                showError('Import Failed', 'Failed to import configuration: ' + err.message);
             }
         };
         reader.readAsText(file);
@@ -6519,58 +6628,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     function clearConfiguration() {
-        if (!confirm('Are you sure you want to clear ALL configuration?\n\nThis will reset:\n• All settings to defaults\n• Remove all resources\n• Remove all aliases\n• Remove all pages\n\nThis cannot be undone!')) {
-            return;
-        }
+        showConfirmDialog(
+            'Clear All Configuration?',
+            'This will reset all settings to defaults, remove all resources, aliases, and pages. This cannot be undone!',
+            () => {
+                // Disconnect all resources first
+                resources.forEach(r => {
+                    if (r.isConnected) {
+                        try { r.port?.close(); } catch(e) {}
+                    }
+                });
 
-        // Disconnect all resources first
-        resources.forEach(r => {
-            if (r.isConnected) {
-                try { r.port?.close(); } catch(e) {}
+                // Clear localStorage
+                localStorage.removeItem('dispatchConsoleV2');
+                localStorage.removeItem('dispatchConsoleSettings');
+
+                // Reset to defaults
+                consoleName = 'Common Dispatch';
+                currentTheme = 'light';
+                selectedVolume = 7;
+                unselectedVolume = 5;
+                masterVolume = 5;
+                micVolume = 6;
+                showRssi = true;
+                showClock = false;
+                clockFormat = '12';
+                pttKey = ' ';
+                consoleIdEnabled = false;
+                consoleIdString = '';
+                consoleIdTiming = 'end';
+                aliasDecodingEnabled = true;
+                emergencyEnabled = true;
+                emergencyTriggerDtmf = '';
+                radioAliases = [];
+                nextAliasId = 1;
+                resources = [];
+                nextResourceId = 1;
+                pages = [];
+                nextPageId = 1;
+
+                // Update clock display
+                updateClockDisplay();
+
+                // Update UI
+                applyTheme();
+                document.getElementById('consoleTitle').textContent = consoleName;
+                renderResources();
+                renderPages();
+                populateSettingsForm();
+
+                console.log('Configuration cleared');
+                showSuccess('Configuration Cleared', 'All settings have been reset to defaults.');
+                hideModal('settingsModal');
             }
-        });
-
-        // Clear localStorage
-        localStorage.removeItem('dispatchConsoleV2');
-        localStorage.removeItem('dispatchConsoleSettings');
-
-        // Reset to defaults
-        consoleName = 'Common Dispatch';
-        currentTheme = 'light';
-        selectedVolume = 7;
-        unselectedVolume = 5;
-        masterVolume = 5;
-        micVolume = 6;
-        showRssi = true;
-        showClock = false;
-        clockFormat = '12';
-        pttKey = ' ';
-        consoleIdEnabled = false;
-        consoleIdString = '';
-        consoleIdTiming = 'end';
-        aliasDecodingEnabled = true;
-        emergencyEnabled = true;
-        emergencyTriggerDtmf = '';
-        radioAliases = [];
-        nextAliasId = 1;
-        resources = [];
-        nextResourceId = 1;
-        pages = [];
-        nextPageId = 1;
-
-        // Update clock display
-        updateClockDisplay();
-
-        // Update UI
-        applyTheme();
-        document.getElementById('consoleTitle').textContent = consoleName;
-        renderResources();
-        renderPages();
-        populateSettingsForm();
-
-        console.log('Configuration cleared');
-        alert('Configuration cleared. All settings reset to defaults.');
-        hideModal('settingsModal');
+        );
     }
 
     function populateSettingsForm() {
@@ -6944,7 +7055,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         renderResources();
         renderPages();
 
-        console.log('Common Dispatch Console v2.30 initialized');
+        console.log('Common Dispatch Console v2.4 initialized');
     });
     </script>
 </body>
