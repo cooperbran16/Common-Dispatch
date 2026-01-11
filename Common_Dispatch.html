@@ -3999,6 +3999,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             return;
         }
 
+        // PATCH CHECK: If a rebroadcast is in progress, deny general transmit
+        if (rebroadcastState.sourceId !== null) {
+            console.log('General TX denied - patch rebroadcast in progress');
+            playBonkSound();
+            return;
+        }
+
         // Separate available and busy resources
         const available = selectedResources.filter(r => !r.busy);
         const busy = selectedResources.filter(r => r.busy);
@@ -4170,6 +4177,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         // If resource is receiving, stop it first
         if (resource.busy && resource.recordingType === 'rx') {
             endRxSession(resourceId);
+        }
+        
+        // PATCH FIX: If this resource is currently the target of a rebroadcast, stop it
+        if (rebroadcastState.targetId === resourceId) {
+            console.log('Instant TX interrupting patch rebroadcast on resource', resourceId);
+            await endRebroadcast();
+        }
+        
+        // PATCH FIX: If this resource is the source of a rebroadcast, also stop it
+        // (can't receive and transmit at the same time)
+        if (rebroadcastState.sourceId === resourceId) {
+            console.log('Instant TX interrupting patch source on resource', resourceId);
+            await endRebroadcast();
         }
 
         muteUnselectedDuringTx(true);
