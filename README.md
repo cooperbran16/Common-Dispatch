@@ -2,6 +2,8 @@
 
 A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. Built entirely with HTML, CSS, and JavaScript — no installation, no server, and no internet connection required.
 
+*Compatible with kv4p HT firmware v14 and earlier (protocol 2.1); not yet compatible with the v15+ KISS/ADPCM rewrite.*
+
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Web%20Browser-brightgreen.svg)
 ![Hardware](https://img.shields.io/badge/hardware-KV4P--HT-orange.svg)
