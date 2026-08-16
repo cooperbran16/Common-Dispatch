@@ -120,7 +120,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 
 ## Screenshots
 
-*Screenshots coming soon - contributions welcome!*
+![Screenshot of Common Dispatch with 2 resources added, both resources have a radio connected. One resource has the activity log expanded, the other is currently in selected status - indicated by the purple outline around and shading within the resource. The console is currently displayed in the 'Dark mode' setting](https://github.com/cooperbran16/Common-Dispatch/blob/main/images/common_dispatch.png)
 
 ## Configuration
 
