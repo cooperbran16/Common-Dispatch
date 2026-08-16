@@ -3680,7 +3680,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     function createActivityLogHtml(resource, isExpanded) {
         const recordingsHtml = resource.recordings.length === 0 
             ? '<div class="text-xs text-gray-500 text-center py-3">No activity recorded</div>'
-            : resource.recordings.slice(-10).reverse().map(rec => 
+            : resource.recordings.slice(-50).reverse().map(rec => 
                 createRecordingItemHtml(resource.id, rec)
             ).join('');
 
