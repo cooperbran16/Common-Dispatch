@@ -8,6 +8,9 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 ![Platform](https://img.shields.io/badge/platform-Web%20Browser-brightgreen.svg)
 ![Hardware](https://img.shields.io/badge/hardware-KV4P--HT-orange.svg)
 
+![Screenshot](https://github.com/cooperbran16/Common-Dispatch/blob/main/images/common_dispatch.png)
+*Common Dispatch shown with 2 resources added, both resources have a radio connected. One resource has the activity log expanded, the other is currently in selected status - indicated by the purple outline around and shading within the resource. The console is displaying the 'Dark mode' setting.*
+
 ## Features
 
 ### Multi-Resource Management
@@ -117,11 +120,6 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Configure the emergency trigger DTMF code in settings (e.g., "911")
 - When detected, the resource flashes red and an alert tone plays; the alert shows the channel it came in on
 - Click the emergency icon in the header to view/acknowledge alerts
-
-## Screenshots
-
-![Screenshot of Common Dispatch with 2 resources added, both resources have a radio connected. One resource has the activity log expanded, the other is currently in selected status - indicated by the purple outline around and shading within the resource. The console is currently displayed in the 'Dark mode' setting](https://github.com/cooperbran16/Common-Dispatch/blob/main/images/common_dispatch.png)
-Common Dispatch shown with 2 resources added, both resources have a radio connected. One resource has the activity log expanded, the other is currently in selected status - indicated by the purple outline around and shading within the resource. The console is displaying the 'Dark mode' setting.
 
 ## Configuration
 
