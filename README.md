@@ -22,7 +22,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 
 ### Console Layout
 - Console Configuration menu (the monitor-and-gear button in the header) holds Add Resource, Add Page and Edit Layout
-- Large or Small card size for each resource and page; small cards are the compact phone-style cards, so more fit on screen
+- Small or Large card size for each resource and page (new ones start Small); small cards are the compact phone-style cards, so more fit on screen
 - Edit Layout: drag resources, pages and the control area anywhere on the screen, snapping to an 8-pixel grid, and drag the control area's edge to resize it
 - Two saved layouts (Layout 1 and Layout 2) to recall at any time, plus the automatic Default layout
 - Control area with equal-size Mute, Paging and Alert buttons and a full-width transmit bar
@@ -122,7 +122,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Manage channels (add, edit, reorder, delete) from the resource's channel manager
 
 ### Arranging the Console
-- Pick Large or Small for each resource and page in its editor
+- Pick Small (the default) or Large for each resource and page in its editor
 - Open Console Configuration → Edit Layout, then Create (or Edit) Layout 1 or Layout 2
 - Drag items into place (they snap to the grid); anything overlapping is outlined in red; Auto-Arrange puts everything back in the Default arrangement
 - Save to keep the layout and switch to it; Recall switches between saved layouts, and Use Default goes back to the automatic one
@@ -157,7 +157,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 ### Resource & Channel Settings (Edit Icon on Resource Card)
 - **Resource Name**: Display name for the radio
 - **Color**: Blue, Green, Red or Yellow
-- **Card Size**: Large or Small
+- **Card Size**: Small (default) or Large
 - **Radio Module Settings**: Pre-/de-emphasis, high-pass and low-pass filters
 - **Channels** (per channel):
   - **Name**: Channel display name (shown on the card)
