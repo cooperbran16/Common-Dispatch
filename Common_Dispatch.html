@@ -545,6 +545,216 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         .dark .list-item { background-color: rgba(55, 65, 81, 0.5) !important; border-color: transparent; }
         .dark .list-item:hover { background-color: rgba(55, 65, 81, 0.8) !important; }
         .list-item.selected, .dark .list-item.selected { background-color: rgba(93, 92, 222, 0.15) !important; border-color: #5D5CDE; }
+
+        /* === CONTROL AREA (v2.6.1) ===
+           Levels on the left, four equal buttons beside them and a full-width transmit bar
+           underneath. The control area is a size container, so it rearranges itself when a
+           layout makes it narrow. */
+        #masterControls { container-type: inline-size; margin-bottom: 1.5rem; padding: 1rem; }
+        .mc-top { display: flex; gap: 0.75rem; align-items: stretch; }
+        .mc-levels { flex: 0 0 15rem; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 0.5rem; }
+        .mc-level-head { display: flex; align-items: baseline; justify-content: space-between; font-size: 0.75rem; line-height: 1rem; font-weight: 500; margin-bottom: 0.25rem; }
+        .mc-level-head span { color: #6b7280; }
+        .dark .mc-level-head span { color: #9ca3af; }
+        .mc-levels input[type="range"] { display: block; width: 100%; }
+        .mc-buttons { flex: 1 1 auto; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
+        .mc-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.375rem;
+            min-height: 5.5rem; padding: 0.5rem 0.25rem; border-radius: 0.5rem; color: #ffffff;
+            font-size: 0.8125rem; line-height: 1rem; font-weight: 600;
+        }
+        .mc-btn .mc-icon { display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; font-size: 1.25rem; line-height: 1.25rem; }
+        .mc-btn .mc-label { white-space: nowrap; }
+        .mc-btn .alert-icon-wrapper .font-bold { font-size: 1.25rem; }
+        .mc-tx {
+            display: flex; align-items: center; justify-content: center; width: 100%; height: 3.5rem; margin-top: 0.75rem;
+            border-radius: 0.5rem; color: #ffffff; font-size: 1.5rem; line-height: 1;
+        }
+        /* The shared active pulse grows the button by 10%; on these side-by-side buttons and the
+           full-width bar that would spill over their neighbours, so they flash instead. */
+        .mc-btn.alert-tone-active, .mc-btn.transmit-active, .mc-tx.transmit-active { animation: mc-flash 1s infinite; }
+        @keyframes mc-flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+        @container (max-width: 34rem) {
+            .mc-top { flex-direction: column; }
+            .mc-levels { flex-basis: auto; }
+            .mc-btn { min-height: 4rem; }
+        }
+
+        /* === CARD SIZES (v2.6.1) ===
+           Resources sit on a 12-column grid: large cards take 4 columns on a wide screen (three
+           across, as before), small cards take 3 (four across). Pages wrap at fixed widths. */
+        .resources-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem; align-items: start; margin-bottom: 1.5rem; }
+        .resources-grid > [data-resource-id], .resources-grid > .resources-empty { grid-column: span 12; }
+        @media (min-width: 640px)  { .resources-grid > .rc-small { grid-column: span 6; } }
+        @media (min-width: 1024px) { .resources-grid > .rc-large { grid-column: span 6; } .resources-grid > .rc-small { grid-column: span 4; } }
+        @media (min-width: 1280px) { .resources-grid > .rc-large { grid-column: span 4; } .resources-grid > .rc-small { grid-column: span 3; } }
+        .resources-empty {
+            border: 2px dashed #d1d5db; border-radius: 0.5rem; padding: 1.25rem; text-align: center;
+            font-size: 0.875rem; color: #6b7280;
+        }
+        .dark .resources-empty { border-color: #374151; color: #9ca3af; }
+        .resources-empty .config-icon { color: #5D5CDE; margin: 0 0.25rem; }
+        .pages-grid { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem; }
+        .pages-grid > .pg-large { width: 142px; }
+        .pages-grid > .pg-small { width: 104px; }
+
+        /* Small resource card: the compact phone-style card */
+        .rc-compact { padding: 0.625rem 0.75rem 0.5rem; }
+        .rc-top { display: flex; align-items: flex-start; gap: 0.625rem; }
+        .rc-compact .instant-tx-btn { width: 40px; height: 40px; font-size: 1rem; }
+        .rc-freq { font-size: 0.8125rem; line-height: 1.125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .rc-freq .rc-tone { font-size: 0.75rem; }
+        .rc-badge { min-width: 2.5rem; }
+        .rc-controls { display: flex; align-items: center; gap: 0.375rem; margin-top: 0.5rem; }
+        .rc-controls input[type="range"] { flex: 1 1 auto; min-width: 0; }
+        .rc-controls .rc-vol { width: 0.75rem; text-align: right; }
+        .rc-btn { width: 2rem; height: 2rem; flex: none; }
+        .rc-compact .activity-log { margin-top: 0.5rem; }
+        .rc-compact .activity-log:not(.expanded) { margin-top: 0; padding-top: 0; border-top-width: 0; }
+
+        /* Small page card */
+        .pg-small { padding: 0.5rem 0.375rem 0.375rem; }
+        .pg-small .pg-icon { width: 2rem; height: 2rem; margin: 0 auto 0.25rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; }
+        .pg-small .pg-name { font-size: 0.8125rem; line-height: 1.125rem; font-weight: 500; }
+        .pg-small .pg-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.125rem; margin-top: 0.125rem; }
+        .pg-small .pg-type { font-size: 0.6875rem; line-height: 1rem; padding-left: 0.125rem; white-space: nowrap; }
+        .pg-small .pg-actions { display: flex; }
+        .pg-small .pg-actions button { width: 1.375rem; height: 1.375rem; display: inline-flex; align-items: center; justify-content: center; font-size: 0.6875rem; border-radius: 0.25rem; }
+
+        /* Card size picker (resource and page editors) */
+        .size-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+        .size-option {
+            display: flex; align-items: center; justify-content: center; gap: 0.625rem; height: 2.75rem;
+            border-radius: 0.5rem; border: 1px solid #d1d5db; background-color: #ffffff; color: #374151;
+            font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+        }
+        .dark .size-option { background-color: #374151; border-color: #4b5563; color: #e5e7eb; }
+        .size-option[aria-checked="true"] { border-color: #5D5CDE; background-color: rgba(93, 92, 222, 0.1); color: #4a49c8; box-shadow: 0 0 0 1px #5D5CDE; }
+        .dark .size-option[aria-checked="true"] { border-color: #8b8aeb; background-color: rgba(93, 92, 222, 0.25); color: #ffffff; box-shadow: 0 0 0 1px #8b8aeb; }
+        .size-glyph { display: inline-block; border: 2px solid currentColor; border-radius: 3px; opacity: 0.8; }
+        .size-glyph-large { width: 22px; height: 16px; }
+        .size-glyph-small { width: 15px; height: 11px; }
+
+        /* === CONSOLE CONFIGURATION MENU (v2.6.1) === */
+        .config-icon { position: relative; display: inline-block; line-height: 1; }
+        .config-icon-badge {
+            position: absolute; right: -0.4rem; bottom: -0.35rem; font-size: 0.6em; padding: 0.12rem;
+            border-radius: 9999px; background-color: #5D5CDE; color: #ffffff; line-height: 1;
+        }
+        #consoleConfigBtn:hover .config-icon-badge, #consoleConfigBtn[aria-expanded="true"] .config-icon-badge { background-color: #7d7de5; }
+        #consoleConfigBtn[aria-expanded="true"] { background-color: rgba(255, 255, 255, 0.2); }
+        .resources-empty .config-icon-badge { background-color: #ffffff; color: #5D5CDE; }
+        .dark .resources-empty .config-icon-badge { background-color: #111827; }
+        .config-menu {
+            position: absolute; right: 0; top: calc(100% + 0.5rem); z-index: 45; min-width: 15rem; padding: 0.375rem;
+            border-radius: 0.5rem; background-color: #ffffff; color: #111827; border: 1px solid #e5e7eb;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15), 0 8px 10px -6px rgba(0,0,0,0.15);
+        }
+        .dark .config-menu { background-color: #1f2937; color: #f3f4f6; border-color: #374151; }
+        .config-menu-title { padding: 0.375rem 0.625rem 0.5rem; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.025em; }
+        .dark .config-menu-title { color: #9ca3af; }
+        .config-menu-item {
+            display: flex; align-items: center; gap: 0.625rem; width: 100%; min-height: 2.5rem; padding: 0.5rem 0.625rem;
+            border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; text-align: left; transition: background-color 0.15s;
+        }
+        .config-menu-item > i { width: 1.25rem; text-align: center; color: #5D5CDE; }
+        .dark .config-menu-item > i { color: #8b8aeb; }
+        .config-menu-item:hover:not(:disabled), .config-menu-item:focus-visible { background-color: #f3f4f6; outline: none; }
+        .dark .config-menu-item:hover:not(:disabled), .dark .config-menu-item:focus-visible { background-color: #374151; }
+        .config-menu-item:disabled { opacity: 0.5; cursor: not-allowed; }
+        .config-menu-meta { margin-left: auto; padding-left: 0.75rem; font-size: 0.75rem; font-weight: 400; color: #6b7280; }
+        .dark .config-menu-meta { color: #9ca3af; }
+        .config-menu-sep { height: 1px; margin: 0.375rem 0.25rem; background-color: #e5e7eb; }
+        .dark .config-menu-sep { background-color: #374151; }
+
+        /* === LAYOUTS (v2.6.1) ===
+           Default: the flowing arrangement above. Layout 1 / 2: every resource, page and the
+           control area is placed at a saved spot on an 8px grid. The two grids become
+           display: contents so their cards are positioned against the console area itself. */
+        body:not(.layout-custom) .layout-item { left: auto !important; top: auto !important; }
+        body:not(.layout-custom) #masterControls { width: auto !important; }
+        body.layout-custom #consoleMain { max-width: none; margin: 0; padding: 0; position: relative; }
+        body.layout-custom #resourcesGrid, body.layout-custom #pagesGrid { display: contents; }
+        body.layout-custom .resources-empty { display: none; }
+        body.layout-custom .layout-item {
+            position: absolute; margin: 0;
+            /* cards fade their colors, but don't slide: a placed item goes straight to its spot */
+            transition-property: color, background-color, border-color, box-shadow, opacity;
+        }
+        body.layout-custom #masterControls { margin: 0; }
+        body.layout-custom [data-resource-id] { display: flex; flex-direction: column; }
+        body.layout-custom [data-resource-id] > .rc-body { flex: 1 1 auto; }
+        body.layout-custom .rc-large { width: 400px; min-height: 224px; }
+        body.layout-custom .rc-small { width: 296px; min-height: 152px; }
+        body.layout-custom .pg-large { width: 144px; min-height: 168px; }
+        body.layout-custom .pg-small { width: 104px; min-height: 96px; }
+        body.layout-custom .layout-raised { z-index: 20; }
+        body.layout-custom .layout-raised-top { z-index: 25; }
+
+        /* Edit Layout mode */
+        .layout-shield, .layout-resize { display: none; }
+        body.layout-editing #consoleMain {
+            background-image:
+                linear-gradient(to right, rgba(93, 92, 222, 0.18) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(93, 92, 222, 0.18) 1px, transparent 1px),
+                linear-gradient(to right, rgba(93, 92, 222, 0.07) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(93, 92, 222, 0.07) 1px, transparent 1px);
+            background-size: 64px 64px, 64px 64px, 8px 8px, 8px 8px;
+        }
+        body.layout-editing .layout-item { overflow: visible !important; user-select: none; -webkit-user-select: none; }
+        body.layout-editing .activity-log.expanded { max-height: 0 !important; overflow: hidden !important; }
+        body.layout-editing .rc-compact .activity-log { margin-top: 0; padding-top: 0; border-top-width: 0; }
+        body.layout-editing .layout-shield {
+            display: block; position: absolute; inset: -2px; z-index: 6; cursor: grab; touch-action: none;
+            border-radius: 0.6rem; outline: 2px dashed #5D5CDE; outline-offset: -1px; background-color: rgba(93, 92, 222, 0.10);
+        }
+        body.layout-editing .layout-shield:hover, body.layout-editing .layout-shield:focus-visible { background-color: rgba(93, 92, 222, 0.20); outline-style: solid; }
+        body.layout-editing .layout-dragging { z-index: 30 !important; box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35); }
+        body.layout-editing .layout-dragging > .layout-shield { cursor: grabbing; outline-style: solid; }
+        body.layout-editing .layout-overlap > .layout-shield { outline-color: #ef4444; background-color: rgba(239, 68, 68, 0.16); }
+        .layout-grip {
+            position: absolute; top: 0.375rem; right: 0.375rem; width: 1.5rem; height: 1.5rem; border-radius: 0.375rem;
+            display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
+            background-color: #5D5CDE; color: #ffffff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); pointer-events: none;
+        }
+        .layout-overlap > .layout-shield .layout-grip { background-color: #ef4444; }
+        .pg-small > .layout-shield .layout-grip { top: 0.25rem; right: 0.25rem; width: 1.25rem; height: 1.25rem; font-size: 0.625rem; }
+        body.layout-editing .layout-resize {
+            display: flex; align-items: center; justify-content: center; position: absolute; z-index: 7;
+            top: 0; bottom: 0; right: -0.625rem; width: 1.25rem; cursor: ew-resize; touch-action: none;
+        }
+        .layout-resize::after { content: ''; width: 0.375rem; height: 3rem; border-radius: 9999px; background-color: #5D5CDE; box-shadow: 0 0 0 2px #ffffff; }
+        .dark .layout-resize::after { box-shadow: 0 0 0 2px #111827; }
+        .layout-editbar {
+            position: sticky; top: 0; z-index: 40; background-color: #eef2ff; border-bottom: 1px solid #c7d2fe;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        .dark .layout-editbar { background-color: #1e1b4b; border-bottom-color: #3730a3; }
+        .layout-editbar-inner { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding: 0.625rem 1rem; }
+        .layout-editbar-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; white-space: nowrap; }
+        .layout-editbar-title > i { color: #5D5CDE; }
+        .dark .layout-editbar-title > i { color: #a5b4fc; }
+        .layout-editbar-hint { flex: 1 1 18rem; min-width: 0; font-size: 0.8125rem; line-height: 1.125rem; color: #4b5563; }
+        .dark .layout-editbar-hint { color: #c7d2fe; }
+        .layout-editbar-warn { color: #dc2626; font-weight: 600; }
+        .dark .layout-editbar-warn { color: #f87171; }
+        .layout-editbar-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-left: auto; }
+
+        /* Edit Layout menu */
+        .layout-slot { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.75rem; }
+        .dark .layout-slot { border-color: #374151; }
+        .layout-slot.is-active { border-color: #22c55e; box-shadow: 0 0 0 1px #22c55e; }
+        .layout-slot-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+        .layout-slot-name { font-weight: 600; }
+        .layout-slot-meta { font-size: 0.8125rem; color: #6b7280; }
+        .dark .layout-slot-meta { color: #9ca3af; }
+        .layout-slot-actions { display: flex; gap: 0.5rem; margin-top: 0.625rem; }
+        .layout-slot-actions > .btn:not(.btn-icon) { flex: 1 1 0%; }
+        .layout-badge {
+            display: inline-flex; align-items: center; gap: 0.375rem; flex-shrink: 0; padding: 0.125rem 0.5rem; border-radius: 9999px;
+            font-size: 0.75rem; font-weight: 600; background-color: #dcfce7; color: #166534;
+        }
+        .dark .layout-badge { background-color: #14532d; color: #bbf7d0; }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
@@ -558,6 +768,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <!-- Clock Display -->
                 <div id="clockDisplay" class="hidden text-lg font-mono font-semibold px-3 py-1.5 bg-white bg-opacity-15 rounded-lg">
                     <i class="fas fa-clock mr-1.5"></i><span id="clockTime">12:00:00</span>
+                </div>
+                <!-- Console Configuration (v2.6.1): Add Resource, Add Page, Edit Layout -->
+                <div class="relative" id="consoleConfigWrap">
+                    <button id="consoleConfigBtn" class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors" title="Console Configuration"
+                            aria-label="Console Configuration" aria-haspopup="menu" aria-expanded="false" aria-controls="consoleConfigMenu">
+                        <span class="config-icon"><i class="fas fa-desktop"></i><i class="fas fa-gear config-icon-badge"></i></span>
+                    </button>
+                    <div id="consoleConfigMenu" class="config-menu hidden" role="menu" aria-label="Console Configuration">
+                        <div class="config-menu-title">Console Configuration</div>
+                        <button type="button" id="addResourceBtn" class="config-menu-item" role="menuitem"><i class="fas fa-walkie-talkie"></i><span>Add Resource</span></button>
+                        <button type="button" id="addPageBtn" class="config-menu-item" role="menuitem"><i class="fas fa-pager"></i><span>Add Page</span></button>
+                        <div class="config-menu-sep" role="separator"></div>
+                        <button type="button" id="editLayoutBtn" class="config-menu-item" role="menuitem"><i class="fas fa-table-cells-large"></i><span>Edit Layout</span><span id="configMenuLayoutName" class="config-menu-meta">Default</span></button>
+                    </div>
                 </div>
                 <!-- Radio Aliases Button -->
                 <button id="aliasesBtn" class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors" title="Radio Aliases">
@@ -580,30 +804,38 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     </header>
 
+    <!-- Edit Layout bar (v2.6.1): shown while a layout is being arranged -->
+    <div id="layoutEditBar" class="layout-editbar hidden" role="region" aria-label="Edit Layout">
+        <div class="layout-editbar-inner">
+            <div class="layout-editbar-title"><i class="fas fa-table-cells-large"></i><span>Editing <span id="layoutEditName">Layout 1</span></span></div>
+            <div class="layout-editbar-hint">
+                <span>Drag resources, pages and the control area to move them; they snap to the grid. Drag the control area's right edge to change its width.</span>
+                <span id="layoutOverlapWarn" class="layout-editbar-warn hidden"></span>
+            </div>
+            <div class="layout-editbar-actions">
+                <button type="button" class="btn btn-secondary" onclick="autoArrangeLayout()" title="Put everything back in the Default arrangement"><i class="fas fa-wand-magic-sparkles"></i>Auto-Arrange</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelLayoutEdit()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveLayoutEdit()"><i class="fas fa-floppy-disk"></i><span id="layoutSaveLabel">Save Layout 1</span></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Console -->
-    <main class="container mx-auto px-4 py-6">
-        <!-- Master Controls -->
-        <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 mb-6 shadow-sm">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <main id="consoleMain" class="container mx-auto px-4 py-6">
+        <!-- Control Area (v2.6.1): levels, four equal buttons, and a full-width transmit bar -->
+        <div id="masterControls" class="layout-item bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm" data-layout-key="mc">
+            <div class="mc-top">
                 <!-- Volume Controls (Stacked) + VU Meter -->
-                <div class="space-y-3">
+                <div class="mc-levels">
                     <!-- Master Volume -->
-                    <div class="space-y-1">
-                        <label class="text-xs font-medium">Master Volume</label>
-                        <div class="flex items-center gap-2">
-                            <input type="range" id="masterVolume" min="0" max="7" value="5" step="1"
-                                class="flex-1">
-                            <span id="masterVolumeDisplay" class="text-xs w-6 text-center">5</span>
-                        </div>
+                    <div>
+                        <div class="mc-level-head"><label for="masterVolume">Master Volume</label><span id="masterVolumeDisplay">5</span></div>
+                        <input type="range" id="masterVolume" min="0" max="7" value="5" step="1">
                     </div>
                     <!-- Microphone Volume -->
-                    <div class="space-y-1">
-                        <label class="text-xs font-medium">Microphone</label>
-                        <div class="flex items-center gap-2">
-                            <input type="range" id="micVolume" min="0" max="7" value="6" step="1"
-                                class="flex-1">
-                            <span id="micVolumeDisplay" class="text-xs w-6 text-center">6</span>
-                        </div>
+                    <div>
+                        <div class="mc-level-head"><label for="micVolume">Microphone</label><span id="micVolumeDisplay">6</span></div>
+                        <input type="range" id="micVolume" min="0" max="7" value="6" step="1">
                     </div>
                     <!-- VU Meter -->
                     <div class="flex items-center gap-2 h-6">
@@ -614,85 +846,79 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </div>
                 </div>
 
-                <!-- Muting Button -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium">Muting</label>
-                    <button id="muteBtn"
-                        class="w-full h-12 p-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors text-xs">
-                        <i id="muteIcon" class="fas fa-volume-up"></i>
+                <div class="mc-buttons">
+                    <!-- Muting -->
+                    <button id="muteBtn" class="mc-btn bg-gray-500 hover:bg-gray-600 transition-colors" title="Mute unselected resources">
+                        <span class="mc-icon"><i id="muteIcon" class="fas fa-volume-up"></i></span>
+                        <span id="muteLabel" class="mc-label">Mute</span>
                     </button>
-                </div>
-
-                <!-- General Transmit -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium">General Transmit</label>
-                    <button id="generalTransmitBtn"
-                        class="w-full h-12 p-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed relative">
-                        <span id="generalTransmitIcon" class="tx-icon-wrap">
+                    <!-- Paging -->
+                    <button id="transmitStackBtn" class="mc-btn bg-green-500 hover:bg-green-600 transition-colors" title="Transmit stacked pages">
+                        <span id="transmitStackIcon" class="mc-icon"><i class="fas fa-pager"></i><i class="fas fa-tower-cell ml-1"></i></span>
+                        <span id="transmitStackLabel" class="mc-label">Paging</span>
+                    </button>
+                    <!-- Alerting -->
+                    <button id="alertTone1Btn" class="mc-btn bg-yellow-500 hover:bg-yellow-600 transition-colors relative" title="Alert Tone 1 (hold)">
+                        <span class="mc-icon alert-icon-wrapper">
+                            <span class="font-bold">1</span>
                             <i class="fas fa-bolt"></i>
+                            <i class="fas fa-music music-note-sub"></i>
                         </span>
+                        <span class="mc-label">Alert</span>
                     </button>
-                </div>
-
-                <!-- Paging Control -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium">Paging</label>
-                    <button id="transmitStackBtn"
-                        class="w-full h-12 p-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors">
-                        <span id="transmitStackIcon">
-                            <i class="fas fa-pager"></i>
-                            <i class="fas fa-tower-cell ml-1"></i>
+                    <button id="alertTone2Btn" class="mc-btn bg-yellow-500 hover:bg-yellow-600 transition-colors relative" title="Alert Tone 2 (hold)">
+                        <span class="mc-icon alert-icon-wrapper">
+                            <span class="font-bold">2</span>
+                            <i class="fas fa-bolt"></i>
+                            <i class="fas fa-music music-note-sub"></i>
                         </span>
+                        <span class="mc-label">Alert</span>
                     </button>
-                </div>
-
-                <!-- Alerting Controls -->
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-center block">Alerting</label>
-                    <div class="grid grid-cols-2 gap-1 h-12">
-                        <button id="alertTone1Btn"
-                            class="flex-1 p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-medium transition-colors relative text-xs">
-                            <span class="alert-icon-wrapper">
-                                <span class="font-bold text-lg">1</span>
-                                <i class="fas fa-bolt"></i>
-                                <i class="fas fa-music music-note-sub"></i>
-                            </span>
-                        </button>
-                        <button id="alertTone2Btn"
-                            class="flex-1 p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-medium transition-colors relative text-xs">
-                            <span class="alert-icon-wrapper">
-                                <span class="font-bold text-lg">2</span>
-                                <i class="fas fa-bolt"></i>
-                                <i class="fas fa-music music-note-sub"></i>
-                            </span>
-                        </button>
-                    </div>
                 </div>
             </div>
+
+            <!-- General Transmit -->
+            <button id="generalTransmitBtn"
+                class="mc-tx bg-red-500 hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed relative"
+                title="General Transmit (hold to talk)" aria-label="General Transmit">
+                <span id="generalTransmitIcon" class="tx-icon-wrap">
+                    <i class="fas fa-bolt"></i>
+                </span>
+            </button>
+
+            <div class="layout-shield" tabindex="0" role="button" aria-label="Move the control area"><span class="layout-grip" aria-hidden="true"><i class="fas fa-up-down-left-right"></i></span></div>
+            <div class="layout-resize" title="Drag to change the control area's width" aria-hidden="true"></div>
         </div>
 
         <!-- Resources Grid -->
-        <div id="resourcesGrid" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-6 items-start">
+        <div id="resourcesGrid" class="resources-grid">
             <!-- Resources will be populated here -->
         </div>
 
         <!-- Pages Grid -->
-        <div id="pagesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mb-6">
+        <div id="pagesGrid" class="pages-grid">
             <!-- Pages will be populated here -->
         </div>
-
-        <!-- Add Buttons -->
-        <div class="text-center space-x-4">
-            <button id="addResourceBtn"
-                class="btn btn-primary btn-lg">
-                <i class="fas fa-plus mr-2"></i>Add Resource
-            </button>
-            <button id="addPageBtn"
-                class="btn btn-primary btn-lg">
-                <i class="fas fa-plus mr-2"></i>Add Page
-            </button>
-        </div>
     </main>
+    <!-- Edit Layout Modal (v2.6.1) -->
+    <div id="layoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="modal-panel modal-content max-w-md">
+            <div class="p-6">
+                <div class="modal-header">
+                    <div class="min-w-0">
+                        <h2 class="modal-title"><i class="fas fa-table-cells-large"></i><span>Edit Layout</span></h2>
+                        <p class="modal-subtitle">Place resources, pages and the control area anywhere on the screen. Two layouts can be saved and recalled here.</p>
+                    </div>
+                    <button type="button" onclick="hideModal('layoutModal')" class="modal-close" aria-label="Close"><i class="fas fa-times"></i></button>
+                </div>
+                <div id="layoutSlotList" class="space-y-3"></div>
+                <div class="modal-footer">
+                    <button type="button" onclick="hideModal('layoutModal')" class="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
         <div class="modal-panel modal-content max-w-md">
@@ -1019,6 +1245,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <button type="button" class="color-swatch tile-yellow" data-color="yellow" role="radio" aria-checked="false" onclick="pickTileColor('resource', 'yellow')"><i class="fas fa-check"></i>Yellow</button>
                         </div>
                         <p class="hint">Shown while the resource is unselected. Selected resources turn white with a green border.</p>
+                    </div>
+
+                    <!-- Card size (v2.6.1) -->
+                    <div>
+                        <label class="label" id="resourceSizeLabel">Card Size</label>
+                        <div class="size-options" role="radiogroup" aria-labelledby="resourceSizeLabel" data-size-group="resource">
+                            <button type="button" class="size-option" data-size="large" role="radio" aria-checked="true" onclick="pickCardSize('resource', 'large')"><span class="size-glyph size-glyph-large" aria-hidden="true"></span>Large</button>
+                            <button type="button" class="size-option" data-size="small" role="radio" aria-checked="false" onclick="pickCardSize('resource', 'small')"><span class="size-glyph size-glyph-small" aria-hidden="true"></span>Small</button>
+                        </div>
+                        <p class="hint">Small is a compact resource card that takes less room on the screen.</p>
                     </div>
 
                     <!-- Manage Channels -->
@@ -1359,6 +1595,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <p class="hint">Shown while the page is not stacked. Stacked pages turn white with a green border.</p>
                     </div>
 
+                    <!-- Card size (v2.6.1) -->
+                    <div>
+                        <label class="label" id="pageSizeLabel">Card Size</label>
+                        <div class="size-options" role="radiogroup" aria-labelledby="pageSizeLabel" data-size-group="page">
+                            <button type="button" class="size-option" data-size="large" role="radio" aria-checked="true" onclick="pickCardSize('page', 'large')"><span class="size-glyph size-glyph-large" aria-hidden="true"></span>Large</button>
+                            <button type="button" class="size-option" data-size="small" role="radio" aria-checked="false" onclick="pickCardSize('page', 'small')"><span class="size-glyph size-glyph-small" aria-hidden="true"></span>Small</button>
+                        </div>
+                        <p class="hint">Small is a compact page card that takes less room on the screen.</p>
+                    </div>
+
                     <div>
                         <label class="label">Page Type</label>
                         <select id="pageType" onchange="updatePageTypeFields()"
@@ -1481,7 +1727,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </button>
                         <div id="help-getting-started" class="hidden px-3 pb-3">
                             <p class="text-sm text-gray-600 dark:text-gray-400">Welcome to Common Dispatch, a web-based radio dispatch console for the KV4P-HT (analog VHF or UHF). It lets you monitor and transmit on several radios at once, send pages, manage radio aliases, and respond to emergencies.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">To begin, click "+ Add Resource", choose a color, and add at least one channel with Manage Channels. Save the resource, open it again with its pencil icon, and click "Connect to Radio" to pick the radio's USB serial port. Once connected you can monitor receive audio, transmit with the push-to-talk controls, and use the rest of the dispatch features.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">To begin, open the Console Configuration menu (the monitor-and-gear button at the top of the screen), choose Add Resource, pick a color, and add at least one channel with Manage Channels. Save the resource, open it again with its pencil icon, and click "Connect to Radio" to pick the radio's USB serial port. Once connected you can monitor receive audio, transmit with the push-to-talk controls, and use the rest of the dispatch features.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Your configuration is stored in this browser, so resources, pages and settings carry over between sessions. Use Export in Settings to back it up or move it to another computer.</p>
                         </div>
                     </div>
@@ -1522,7 +1768,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </button>
                         <div id="help-muting" class="hidden px-3 pb-3">
                             <p class="text-sm text-gray-600 dark:text-gray-400">The Mute button temporarily silences audio from unselected resources while allowing selected resources to continue playing. This is useful when you need to focus on specific channels without losing awareness of activity on others.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Muting automatically disables after 15 seconds to prevent accidentally missing important transmissions. The button displays red when muting is active.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Muting automatically disables after 15 seconds to prevent accidentally missing important transmissions. The button turns red and reads "Muted" while muting is active.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Note: Selected resources are never muted, ensuring you always hear priority traffic.</p>
                         </div>
                     </div>
@@ -1534,7 +1780,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <i id="help-general-tx-icon" class="fas fa-caret-right text-gray-400"></i>
                         </button>
                         <div id="help-general-tx" class="hidden px-3 pb-3">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">The General Transmit button (red lightning bolt) is your primary push-to-talk control. Press and hold to transmit on all selected and connected resources simultaneously. Release to end the transmission.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">The General Transmit bar (the wide red bar with a lightning bolt along the bottom of the control area) is your primary push-to-talk control. Press and hold to transmit on all selected and connected resources simultaneously. Release to end the transmission.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Before transmitting, you will hear a brief talk permit tone (three short beeps) confirming the transmission has begun. If no resources are available for transmission, you will hear a denied tone (low buzzer).</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">If some selected resources are busy receiving while others are available, you will hear a denied tone followed by a talk permit tone. Transmission will begin on available resources, and busy resources will automatically join the transmission when they stop receiving.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">You can also use a keyboard key for PTT. The default key is Space, but this can be customized in Settings. Keyboard PTT is disabled when any settings window or dialog is open.</p>
@@ -1593,9 +1839,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <i id="help-add-resource-icon" class="fas fa-caret-right text-gray-400"></i>
                         </button>
                         <div id="help-add-resource" class="hidden px-3 pb-3">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Click "+ Add Resource" to create a new resource. In the resource editor, set:</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Choose Add Resource from the Console Configuration menu (the monitor-and-gear button at the top of the screen) to create a new resource. In the resource editor, set:</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Resource Name:</strong> An internal label used for identification in logs and settings (e.g., "vhf1" or "uhf1"). This name is not shown on the main screen; the active channel's name is shown there instead.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Color:</strong> Blue, Green, Red or Yellow. The resource shows its color while unselected and turns white with a green border when selected.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Card Size:</strong> Large or Small. A small card is a compact version of the same controls: the frequency and tone share a line, and the volume slider shares its row with Priority, Patch and Edit.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Manage Channels:</strong> Opens the channel list for this resource, where you configure the actual radio settings. A resource cannot be saved until it has at least one channel.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Important: Save a new resource first, then reopen it with the pencil icon on its card and click "Connect to Radio" to connect it.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Saved resources also have a Radio Module section for the radio module's audio filters (see Module Settings). To delete a resource, use Delete Resource at the bottom of the editor.</p>
@@ -1714,8 +1961,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </button>
                         <div id="help-pages" class="hidden px-3 pb-3">
                             <p class="text-sm text-gray-600 dark:text-gray-400">Pages are pre-configured tone sequences used to alert or activate remote equipment such as pagers, station alerting systems, or tone-activated devices. The console supports two page types: DTMF and 2-Tone.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Page cards display the page name and type in the page's color, chosen in the page editor. Single-click a page card to immediately transmit that page on all selected resources. Long-press (hold for 0.5 seconds) to add the page to the transmission stack without sending immediately.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Stacked pages turn white (dark grey in dark mode) with a green border and checkmark, the same way a selected resource does. Use the Paging button in Master Controls to transmit all stacked pages in sequence.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add a page with Add Page in the Console Configuration menu. Page cards display the page name and type in the page's color, chosen in the page editor, at the card size chosen there (Large or Small). Single-click a page card to immediately transmit that page on all selected resources. Long-press (hold for 0.5 seconds) to add the page to the transmission stack without sending immediately.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Stacked pages turn white (dark grey in dark mode) with a green border and checkmark, the same way a selected resource does. Use the Paging button in the control area to transmit all stacked pages in sequence.</p>
                         </div>
                     </div>
 
@@ -1793,6 +2040,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </div>
                     </div>
 
+                    <!-- Console Layout (v2.6.1) -->
+                    <div class="help-topic border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <button onclick="toggleHelpTopic('help-layout')" class="w-full flex justify-between items-center p-3 text-left font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg">
+                            <span>Console Layout</span>
+                            <i id="help-layout-icon" class="fas fa-caret-right text-gray-400"></i>
+                        </button>
+                        <div id="help-layout" class="hidden px-3 pb-3">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">The Console Configuration button (a monitor with a gear) at the top of the screen holds Add Resource, Add Page and Edit Layout.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Default</strong> arranges everything automatically: the control area across the top, then the resources, then the pages, wrapping to fit the window. Small cards fit more to a row.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Layout 1 and Layout 2</strong> are arrangements you place yourself. In Edit Layout, choose Create (or Edit) on a layout. The console starts from what's on screen, and every resource, page and the control area gets a dashed outline. Drag them anywhere; they snap to an 8-pixel grid. Drag the control area's right edge to make it wider or narrower; when it's narrow its buttons move under the volume sliders. Anything that overlaps something else is outlined in red. Auto-Arrange puts everything back where Default would. Save keeps the layout and switches to it; Cancel leaves it as it was.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">While you're editing, the on-screen buttons are locked so nothing transmits by accident. Receive audio keeps playing, and the keyboard push-to-talk key still works.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Use Recall in Edit Layout to switch to a saved layout, or Use Default to go back to the automatic one. A resource or page added later goes into the first free spot of the layout in use. Layouts are saved with the rest of the configuration and included in Export.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">An open activity log or channel list in a saved layout opens over whatever is below it, instead of pushing it down.</p>
+                        </div>
+                    </div>
+
                     <!-- Settings -->
                     <div class="help-topic border border-gray-200 dark:border-gray-700 rounded-lg">
                         <button onclick="toggleHelpTopic('help-settings')" class="w-full flex justify-between items-center p-3 text-left font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg">
@@ -1818,7 +2081,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </button>
                         <div id="help-keyboard" class="hidden px-3 pb-3">
                             <p class="text-sm text-gray-600 dark:text-gray-400"><strong>Space</strong> (or custom key): Push-to-talk for General Transmit. Press and hold to transmit on all selected resources.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Escape:</strong> Closes the topmost open window.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Escape:</strong> Closes the Console Configuration menu or the topmost open window.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Arrow keys</strong> (while editing a layout): Move the highlighted item one grid step; hold Shift to move four steps.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Keyboard PTT is automatically disabled when any other settings window or dialog is open, preventing accidental transmissions while configuring the console.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">The PTT key can be customized in Settings. Click "Click to Set Key" and press your desired key to assign it.</p>
                         </div>
@@ -1833,7 +2097,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <div id="help-about" class="hidden px-3 pb-3">
                             <div class="text-center mb-4">
                                 <h3 class="text-lg font-bold text-primary">Common Dispatch Console</h3>
-                                <p class="text-sm text-gray-500">Version 2.6</p>
+                                <p class="text-sm text-gray-500">Version 2.6.1</p>
                             </div>
                             
                             <div class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
@@ -2175,7 +2439,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     let resourceDtmfDecoders = new Map();
 
     // Modal tracking for PTT keybind
-    const modalIds = ['settingsModal', 'aliasesModal', 'aliasEditModal', 'emergencyModal', 'resourceModal', 'manageChannelsModal', 'channelEditModal', 'pageModal', 'confirmModal', 'errorModal', 'successModal', 'helpModal', 'kv4pModuleSubmodal'];
+    const modalIds = ['settingsModal', 'aliasesModal', 'aliasEditModal', 'emergencyModal', 'resourceModal', 'manageChannelsModal', 'channelEditModal', 'pageModal', 'confirmModal', 'errorModal', 'successModal', 'helpModal', 'kv4pModuleSubmodal', 'layoutModal'];
 
     // ============================================================================
     // DTMF DECODER CLASS (Goertzel Algorithm)
@@ -3815,6 +4079,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             grid.appendChild(createResourceCard(resource));
         });
 
+        // v2.6.1: Add Resource lives in the Console Configuration menu, so point new users there.
+        if (resources.length === 0) {
+            const hint = document.createElement('div');
+            hint.className = 'resources-empty';
+            hint.innerHTML = 'No resources yet. Open Console Configuration (<span class="config-icon" aria-hidden="true"><i class="fas fa-desktop"></i><i class="fas fa-gear config-icon-badge"></i></span>) at the top of the screen and choose Add Resource.';
+            grid.appendChild(hint);
+        }
+
         // Restore activity-log scroll positions
         Object.keys(scrollPositions).forEach(rid => {
             const card = grid.querySelector(`[data-resource-id="${rid}"]`);
@@ -3823,6 +4095,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 if (log) log.scrollTop = scrollPositions[rid];
             }
         });
+        scheduleLayoutExtent();
     }
 
     function createResourceCard(resource) {
@@ -3830,6 +4103,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         card.setAttribute('data-resource-id', resource.id); // For targeted DOM updates
         const isEmergency = activeEmergencyResourceIds.has(resource.id);
         const isExpanded = expandedResources.has(resource.id);
+        const small = cardSizeKey(resource.cardSize) === 'small';
         const nodes = resourceAudioNodes.get(resource.id);
         const currentCallerId = nodes ? nodes.currentCallerId : null;
         const lastCallerId = nodes ? nodes.lastCallerId : null;
@@ -3855,6 +4129,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         cardClasses += colored ? ` tile-color tile-${tileColorKey(resource.color)}` : ' bg-white dark:bg-gray-800';
         if (isEmergency) cardClasses += ' emergency-active border-red-500';
         else if (resource.selected) cardClasses += ' resource-selected';
+        cardClasses += small ? ' rc-small' : ' rc-large';
         card.className = cardClasses;
         // Class sets that differ between a colored (unselected) tile and a selected one
         const subText = colored ? 'tile-muted' : 'text-gray-600 dark:text-gray-400';
@@ -3893,17 +4168,25 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             connCls = 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'; connIcon = 'fa-spinner fa-spin'; connText = 'Init...';
         }
 
-        const statusRowHtml = `
-            <div class="flex items-center gap-2 mt-1 text-xs">
-                <!-- Connection Status - fixed width -->
-                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium w-24 justify-center ${connCls}">
+        // Connection badge on a small card: just the band, or an icon while offline / starting.
+        const connTitle = !resource.isConnected ? 'Disconnected' : resource.handshakeComplete ? `Connected${rfTypeStr ? ' (' + rfTypeStr + ')' : ''}` : 'Initializing';
+        const badgeHtml = small
+            ? `<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-xs font-medium rc-badge ${connCls}" title="${connTitle}">
+                    ${!resource.isConnected ? '<i class="fas fa-unlink"></i>' : resource.handshakeComplete ? connText : '<i class="fas fa-spinner fa-spin"></i>'}
+               </span>`
+            : `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium w-24 justify-center ${connCls}">
                     <i class="fas ${connIcon} mr-1"></i>
                     ${connText}
-                </span>
+                </span>`;
+
+        const statusRowHtml = `
+            <div class="flex items-center gap-2 mt-1 text-xs">
+                <!-- Connection Status -->
+                ${badgeHtml}
                 <!-- RX/TX Indicator - fixed width -->
                 <span class="rx-tx-indicator w-5 text-center">
-                    ${isReceiving ? '<i class="fas fa-volume-up text-blue-500 animate-pulse"></i>' : 
-                      isTransmitting ? '<i class="fas fa-microphone text-red-500 animate-pulse"></i>' : 
+                    ${isReceiving ? '<i class="fas fa-volume-up text-blue-500 animate-pulse"></i>' :
+                      isTransmitting ? '<i class="fas fa-microphone text-red-500 animate-pulse"></i>' :
                       '<i class="fas fa-volume-off text-gray-300 dark:text-gray-600"></i>'}
                 </span>
                 <!-- RSSI Meter - fixed width -->
@@ -3917,13 +4200,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             </div>
         `;
 
-        card.innerHTML = `
-            <div class="p-3">
-                <!-- Main Content Row -->
-                <div class="flex items-start gap-3">
-                    <!-- Left Column: Instant Transmit (aligned with Priority) -->
-                    <div class="flex flex-col items-center gap-1 flex-shrink-0">
-                        <!-- Instant Transmit Button -->
+        // Pieces shared by the large and small cards
+        const offline = !resource.isConnected;
+        const txButtonHtml = `
                         <button onmousedown="pointerPttDown('instant${resource.id}', () => startInstantTransmit(${resource.id})); event.stopPropagation();"
                                 onmouseup="pointerPttUp('instant${resource.id}', stopTransmit); event.stopPropagation();"
                                 onmouseleave="pointerPttUp('instant${resource.id}', stopTransmit)"
@@ -3931,17 +4210,13 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                 ontouchend="pointerPttUp('instant${resource.id}', stopTransmit); event.stopPropagation(); event.preventDefault();"
                                 class="instant-tx-btn relative rounded-lg font-medium transition-colors
                                 ${txBtnClasses} ${activeRing}
-                                ${!resource.isConnected ? 'opacity-50 cursor-not-allowed' : ''}"
-                                ${!resource.isConnected ? 'disabled' : ''}
+                                ${offline ? 'opacity-50 cursor-not-allowed' : ''}"
+                                ${offline ? 'disabled' : ''}
                                 title="Instant Transmit (PTT)">
                             <i class="fas fa-bolt"></i>
-                        </button>
-                    </div>
+                        </button>`;
 
-                    <!-- Resource Info (Center) -->
-                    <div class="flex-1 min-w-0 resource-selectable rounded p-1 -m-1 relative" onclick="toggleResourceSelection(${resource.id})">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1 min-w-0">
+        const nameRowHtml = `
                                 <div class="flex items-center gap-1 min-w-0 relative">
                                     <h3 class="font-semibold text-base truncate">${escapeHtml(activeChannel ? activeChannel.name : resource.name)}</h3>
                                     ${resource.channels.length > 1 ? `
@@ -3962,11 +4237,97 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                                             `).join('')}
                                         </div>
                                     ` : ''}
-                                </div>
+                                </div>`;
+
+        const freqText = activeChannel ? activeChannel.frequency.toFixed(4) : '0.0000';
+        const txFreqText = activeChannel && activeChannel.mode === 'half-duplex' && activeChannel.transmitFrequency
+            ? activeChannel.transmitFrequency.toFixed(4) : '';
+
+        const priorityBtnHtml = (sizeCls) => `
+                        <button onclick="toggleResourcePriority(${resource.id}); event.stopPropagation();"
+                                class="rounded-lg text-sm font-medium transition-colors ${sizeCls} flex items-center justify-center
+                                ${resource.priority ? `bg-purple-500 text-white ${activeRing}` : neutralBtn}
+                                ${offline ? 'opacity-50 cursor-not-allowed' : ''}"
+                                ${offline ? 'disabled' : ''}
+                                title="Priority Tone (675Hz every 10s)">
+                            <span class="priority-icon-wrapper">
+                                <i class="fas fa-tower-cell"></i>
+                                <i class="fas fa-music music-note-super ${resource.priority ? 'active' : ''}"></i>
+                            </span>
+                        </button>`;
+        const patchBtnHtml = (sizeCls) => `
+                        <button onclick="toggleResourcePatch(${resource.id}); event.stopPropagation();"
+                                class="rounded-lg text-sm font-medium transition-colors ${sizeCls} flex items-center justify-center
+                                ${resource.patch ? `bg-yellow-500 text-white ${activeRing}` : neutralBtn}"
+                                title="Patch (cross-connect resources)">
+                            <i class="fas fa-link"></i>
+                        </button>`;
+        const editBtnHtml = (sizeCls) => `
+                        <button onclick="editResource(${resource.id}); event.stopPropagation();"
+                                class="rounded-lg text-sm transition-colors ${sizeCls} flex items-center justify-center ${colored ? 'tile-btn' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300'}"
+                                title="Edit Resource">
+                            <i class="fas fa-edit"></i>
+                        </button>`;
+
+        const volumeHtml = `
+                    <i class="fas fa-volume-down ${colored ? 'tile-muted' : 'text-gray-500'} text-sm"></i>
+                    <input type="range" min="0" max="7" value="${resource.volume}" step="1"
+                           onchange="updateResourceVolume(${resource.id}, this.value)"
+                           oninput="this.nextElementSibling.textContent = this.value"
+                           class="flex-1" aria-label="Volume">
+                    <span class="text-xs ${colored ? 'tile-muted' : 'text-gray-500'} ${small ? 'rc-vol' : 'w-6 text-right'}">${resource.volume}</span>`;
+
+        const expandBtnHtml = `
+            <button onclick="toggleResourceExpand(${resource.id}); event.stopPropagation();"
+                    class="expand-btn ${colored ? 'tile-foot' : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-500 dark:text-gray-400'} transition-colors"
+                    title="${isExpanded ? 'Hide Activity Log' : 'Show Activity Log'}">
+                <i class="fas fa-circle-chevron-${isExpanded ? 'up' : 'down'}"></i>
+                <span class="ml-1 text-xs">Activity Log ${resource.recordings.length > 0 ? `(${resource.recordings.length})` : ''}</span>
+            </button>`;
+
+        if (small) {
+            // Small: the compact card from the phone layout. Frequency and tone share a line;
+            // the volume slider shares its row with Priority, Patch and Edit.
+            card.innerHTML = `
+            <div class="rc-body rc-compact">
+                <div class="rc-top">
+                    ${txButtonHtml}
+                    <div class="flex-1 min-w-0 resource-selectable rounded p-1 -m-1 relative" onclick="toggleResourceSelection(${resource.id})">
+                        ${nameRowHtml}
+                        <div class="rc-freq ${subText}" title="${freqText} MHz${txFreqText ? ' → ' + txFreqText : ''} · ${toneDisplay}">
+                            <span class="font-mono">${freqText} MHz</span>${txFreqText ? `<span class="font-mono text-xs"> → ${txFreqText}</span>` : ''}<span class="rc-tone"> · ${toneDisplay}</span>
+                        </div>
+                        ${statusRowHtml}
+                    </div>
+                </div>
+                <div class="rc-controls" onclick="event.stopPropagation();">
+                    ${volumeHtml}
+                    ${priorityBtnHtml('rc-btn')}
+                    ${patchBtnHtml('rc-btn')}
+                    ${editBtnHtml('rc-btn')}
+                </div>
+                ${activityLogHtml}
+            </div>
+            ${expandBtnHtml}
+        `;
+        } else {
+            card.innerHTML = `
+            <div class="rc-body p-3">
+                <!-- Main Content Row -->
+                <div class="flex items-start gap-3">
+                    <!-- Left Column: Instant Transmit (aligned with Priority) -->
+                    <div class="flex flex-col items-center gap-1 flex-shrink-0">
+                        ${txButtonHtml}
+                    </div>
+
+                    <!-- Resource Info (Center) -->
+                    <div class="flex-1 min-w-0 resource-selectable rounded p-1 -m-1 relative" onclick="toggleResourceSelection(${resource.id})">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1 min-w-0">
+                                ${nameRowHtml}
                                 <div class="text-sm ${subText} font-mono">
-                                    ${activeChannel ? activeChannel.frequency.toFixed(4) : '0.0000'} MHz
-                                    ${activeChannel && activeChannel.mode === 'half-duplex' && activeChannel.transmitFrequency ? 
-                                        `<span class="text-xs">→ ${activeChannel.transmitFrequency.toFixed(4)}</span>` : ''}
+                                    ${freqText} MHz
+                                    ${txFreqText ? `<span class="text-xs">→ ${txFreqText}</span>` : ''}
                                 </div>
                                 <div class="text-xs ${colored ? 'tile-muted' : 'text-gray-500'}">${toneDisplay}</div>
                                 <!-- Status Row: Connection, Speaker, RSSI, Caller ID -->
@@ -3977,42 +4338,15 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
                     <!-- Right Side Buttons (Single Vertical Stack) -->
                     <div class="stacked-controls-vertical flex flex-col gap-1 flex-shrink-0">
-                        <!-- Priority/Channel Marker (Top) -->
-                        <button onclick="toggleResourcePriority(${resource.id}); event.stopPropagation();" 
-                                class="rounded-lg text-sm font-medium transition-colors w-9 h-9 flex items-center justify-center
-                                ${resource.priority ? `bg-purple-500 text-white ${activeRing}` : neutralBtn}
-                                ${!resource.isConnected ? 'opacity-50 cursor-not-allowed' : ''}"
-                                ${!resource.isConnected ? 'disabled' : ''}
-                                title="Priority Tone (675Hz every 10s)">
-                            <span class="priority-icon-wrapper">
-                                <i class="fas fa-tower-cell"></i>
-                                <i class="fas fa-music music-note-super ${resource.priority ? 'active' : ''}"></i>
-                            </span>
-                        </button>
-                        <!-- Patch (Middle) -->
-                        <button onclick="toggleResourcePatch(${resource.id}); event.stopPropagation();" 
-                                class="rounded-lg text-sm font-medium transition-colors w-9 h-9 flex items-center justify-center
-                                ${resource.patch ? `bg-yellow-500 text-white ${activeRing}` : neutralBtn}"
-                                title="Patch (cross-connect resources)">
-                            <i class="fas fa-link"></i>
-                        </button>
-                        <!-- Edit Resource (Bottom) -->
-                        <button onclick="editResource(${resource.id}); event.stopPropagation();" 
-                                class="rounded-lg text-sm transition-colors w-9 h-9 flex items-center justify-center ${colored ? 'tile-btn' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300'}"
-                                title="Edit Resource">
-                            <i class="fas fa-edit"></i>
-                        </button>
+                        ${priorityBtnHtml('w-9 h-9')}
+                        ${patchBtnHtml('w-9 h-9')}
+                        ${editBtnHtml('w-9 h-9')}
                     </div>
                 </div>
 
                 <!-- Volume Slider -->
                 <div class="flex items-center space-x-2 mt-3" onclick="event.stopPropagation();">
-                    <i class="fas fa-volume-down ${colored ? 'tile-muted' : 'text-gray-500'} text-sm"></i>
-                    <input type="range" min="0" max="7" value="${resource.volume}" step="1"
-                           onchange="updateResourceVolume(${resource.id}, this.value)"
-                           oninput="this.nextElementSibling.textContent = this.value"
-                           class="flex-1">
-                    <span class="text-xs ${colored ? 'tile-muted' : 'text-gray-500'} w-6 text-right">${resource.volume}</span>
+                    ${volumeHtml}
                 </div>
 
                 <!-- Activity Log Section (Collapsible) -->
@@ -4020,15 +4354,16 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             </div>
 
             <!-- Expand/Collapse Button (Bottom) -->
-            <button onclick="toggleResourceExpand(${resource.id}); event.stopPropagation();"
-                    class="expand-btn ${colored ? 'tile-foot' : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-500 dark:text-gray-400'} transition-colors"
-                    title="${isExpanded ? 'Hide Activity Log' : 'Show Activity Log'}">
-                <i class="fas fa-circle-chevron-${isExpanded ? 'up' : 'down'}"></i>
-                <span class="ml-1 text-xs">Activity Log ${resource.recordings.length > 0 ? `(${resource.recordings.length})` : ''}</span>
-            </button>
+            ${expandBtnHtml}
         `;
+        }
 
         attachChannelDropdownGuard(card, resource.id);
+        decorateLayoutItem(card, 'r' + resource.id, {
+            raised: isExpanded,
+            top: expandedChannelDropdowns.has(resource.id),
+            label: activeChannel ? activeChannel.name : resource.name
+        });
 
         return card;
     }
@@ -4457,6 +4792,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
         if (isMuted) {
             muteIcon.className = 'fas fa-volume-mute';
+            document.getElementById('muteLabel').textContent = 'Muted';
             muteBtn.classList.add('bg-red-500');
             muteBtn.classList.remove('bg-gray-500');
 
@@ -4468,6 +4804,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             }, 15000);
         } else {
             muteIcon.className = 'fas fa-volume-up';
+            document.getElementById('muteLabel').textContent = 'Mute';
             muteBtn.classList.remove('bg-red-500');
             muteBtn.classList.add('bg-gray-500');
         }
@@ -4837,6 +5174,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         pages.forEach(page => {
             grid.appendChild(createPageCard(page));
         });
+        scheduleLayoutExtent();
     }
 
     function createPageCard(page) {
@@ -4847,8 +5185,31 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         // the same treatment as a selected resource.
         const colored = !isStacked;
         card.setAttribute('data-page-id', page.id);
-        card.className = `rounded-lg shadow-sm border-2 p-3 text-center transition-all cursor-pointer hover:shadow-md ${colored ? `tile-color tile-${tileColorKey(page.color)}` : 'bg-white dark:bg-gray-800 page-stacked'}`;
+        const small = cardSizeKey(page.cardSize) === 'small';
+        card.className = `rounded-lg shadow-sm border-2 ${small ? 'pg-small' : 'pg-large p-3'} text-center transition-all cursor-pointer hover:shadow-md ${colored ? `tile-color tile-${tileColorKey(page.color)}` : 'bg-white dark:bg-gray-800 page-stacked'}`;
 
+        if (small) {
+            // Small: the compact tile from the phone layout
+            card.innerHTML = `
+            <div class="pg-icon ${colored ? 'tile-btn' : 'bg-green-500 text-white'}">
+                <i class="fas fa-pager"></i>
+            </div>
+            <div class="pg-name truncate" title="${escapeHtml(page.name)}">${escapeHtml(page.name)}</div>
+            <div class="pg-foot">
+                <span class="pg-type ${colored ? 'tile-muted' : 'text-gray-500'}">${page.type === 'dtmf' ? 'DTMF' : '2-Tone'}</span>
+                <span class="pg-actions">
+                    <button onclick="event.stopPropagation(); editPage(${page.id})"
+                            class="${colored ? 'tile-muted' : 'text-gray-500 hover:text-primary'} transition-colors" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="event.stopPropagation(); confirmDeletePage(${page.id})"
+                            class="${colored ? 'tile-muted' : 'text-gray-500 hover:text-red-500'} transition-colors" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </span>
+            </div>
+        `;
+        } else {
         card.innerHTML = `
             <div class="w-12 h-12 ${colored ? 'tile-btn' : 'bg-green-500 text-white'} rounded-lg mb-2 mx-auto flex items-center justify-center">
                 <i class="fas fa-pager"></i>
@@ -4866,6 +5227,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 </button>
             </div>
         `;
+        }
+        decorateLayoutItem(card, 'p' + page.id, { label: page.name });
 
         // Page press handlers
         card.addEventListener('mousedown', (e) => {
@@ -4949,7 +5312,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         stackBtn.classList.add('transmit-active');
         stackBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
         stackBtn.classList.add('bg-red-500', 'hover:bg-red-600');
-        stackIcon.innerHTML = '<i class="fas fa-stop"></i> Cancel';
+        stackIcon.innerHTML = '<i class="fas fa-stop"></i>';
+        document.getElementById('transmitStackLabel').textContent = 'Cancel';
 
         console.log(`Transmitting page: ${page.name}`);
 
@@ -5032,7 +5396,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         stackBtn.classList.add('transmit-active');
         stackBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
         stackBtn.classList.add('bg-red-500', 'hover:bg-red-600');
-        stackIcon.innerHTML = '<i class="fas fa-stop"></i> Cancel';
+        stackIcon.innerHTML = '<i class="fas fa-stop"></i>';
+        document.getElementById('transmitStackLabel').textContent = 'Cancel';
 
         // Transmit each stacked page
         for (const pageId of stackedPages) {
@@ -5096,6 +5461,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         stackBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
         stackBtn.classList.add('bg-green-500', 'hover:bg-green-600');
         stackIcon.innerHTML = '<i class="fas fa-pager"></i><i class="fas fa-tower-cell ml-1"></i>';
+        document.getElementById('transmitStackLabel').textContent = 'Paging';
     }
 
     // ============================================================================
@@ -7311,6 +7677,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         document.getElementById('resourceConnectionInfo').innerHTML = '<span class="text-gray-500">Status: Not Connected</span>';
         document.getElementById('resourceDeleteSection').classList.add('hidden');  // Hide delete for new resources
         pickTileColor('resource', DEFAULT_TILE_COLOR);
+        pickCardSize('resource', 'large');
         updateResourceModuleSection();
         editingChannels = [];
         selectedChannelIds = [];
@@ -7338,6 +7705,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         document.getElementById('resourceModalTitle').textContent = 'Edit Resource';
         document.getElementById('resourceName').value = resource.name;
         pickTileColor('resource', resource.color);
+        pickCardSize('resource', resource.cardSize);
         updateResourceModuleSection();
 
         // Work on a copy so Manage Channels edits don't take effect until Save Resource
@@ -7374,6 +7742,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 const resource = resources[idx];
                 resource.name = name;
                 resource.color = editingTileColor.resource;
+                resource.cardSize = editingCardSize.resource;
                 resource.channels = editingChannels.map(c => ({ ...c }));
                 // If the previously-active channel was deleted, fall back to the first channel
                 if (!resource.channels.some(c => c.id === resource.activeChannelId)) {
@@ -7387,6 +7756,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 id: nextResourceId++,
                 name,
                 color: editingTileColor.resource,
+                cardSize: editingCardSize.resource,
                 channels,
                 activeChannelId: channels[0].id,
                 volume: unselectedVolume,
@@ -7718,6 +8088,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         document.getElementById('pageForm').reset();
         document.getElementById('pageType').value = 'dtmf';
         pickTileColor('page', DEFAULT_TILE_COLOR);
+        pickCardSize('page', 'large');
         updatePageTypeFields();
         showModal('pageModal');
     }
@@ -7730,6 +8101,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         document.getElementById('pageModalTitle').textContent = 'Edit Page';
         document.getElementById('pageName').value = page.name;
         pickTileColor('page', page.color);
+        pickCardSize('page', page.cardSize);
         document.getElementById('pageType').value = page.type;
         document.getElementById('dtmfString').value = page.dtmfString || '';
         document.getElementById('firstToneFreq').value = page.firstToneFreq || '';
@@ -7747,7 +8119,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
         if (!name) return;
 
-        const pageData = { name, type, color: editingTileColor.page };
+        const pageData = { name, type, color: editingTileColor.page, cardSize: editingCardSize.page };
 
         if (type === 'dtmf') {
             const dtmfString = sanitizeDTMFString(document.getElementById('dtmfString').value);
@@ -7875,7 +8247,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 selected: r.selected,
                 priority: false,                  // needs a live connection; never restored armed
                 patch: r.patch,
-                moduleFilters: r.moduleFilters || null           // SA818 audio filters; null = all off
+                moduleFilters: r.moduleFilters || null,          // SA818 audio filters; null = all off
+                cardSize: cardSizeKey(r.cardSize)
             };
         }
 
@@ -7901,13 +8274,15 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             volume: r.volume,
             selected: r.selected,
             priority: false,                  // needs a live connection; never restored armed
-            patch: r.patch
+            patch: r.patch,
+            cardSize: cardSizeKey(r.cardSize)
         };
     }
 
     function exportConfiguration() {
+        pruneLayoutProfiles();
         const config = {
-            version: 'v2.6',
+            version: 'v2.6.1',
             exportDate: new Date().toISOString(),
             consoleName,
             currentTheme,
@@ -7939,12 +8314,15 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 selected: r.selected,
                 priority: r.priority,
                 patch: r.patch,
-                moduleFilters: r.moduleFilters || null
+                moduleFilters: r.moduleFilters || null,
+                cardSize: cardSizeKey(r.cardSize)
             })),
             nextResourceId,
             nextChannelId,
             pages,
-            nextPageId
+            nextPageId,
+            layoutProfiles,
+            activeLayout
         };
 
         const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
@@ -7996,6 +8374,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 if (config.nextAliasId) nextAliasId = config.nextAliasId;
                 if (config.pages) pages = config.pages;
                 if (config.nextPageId) nextPageId = config.nextPageId;
+                if (layoutEdit) { stopLayoutDrag(); layoutEdit = null; }
+                layoutProfiles = sanitizeLayoutProfiles(config.layoutProfiles);
+                activeLayout = restoreActiveLayout(config.activeLayout);
 
                 if (config.resources) {
                     // Disconnect existing resources properly first (a bare port.close() fails while
@@ -8030,8 +8411,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 
                 // Save and refresh
                 saveToLocalStorage();
-                renderResources();
-                renderPages();
+                refreshLayout();
                 populateSettingsForm();
 
                 console.log('Configuration imported successfully from:', config.exportDate || 'unknown date');
@@ -8093,6 +8473,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 nextChannelId = 1;
                 pages = [];
                 nextPageId = 1;
+                if (layoutEdit) { stopLayoutDrag(); layoutEdit = null; }
+                layoutProfiles = [null, null];
+                activeLayout = 0;
 
                 // Update clock display
                 updateClockDisplay();
@@ -8100,8 +8483,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 // Update UI
                 applyTheme();
                 document.getElementById('consoleTitle').textContent = consoleName;
-                renderResources();
-                renderPages();
+                refreshLayout();
                 populateSettingsForm();
 
                 console.log('Configuration cleared');
@@ -8209,10 +8591,530 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     }
 
     // ============================================================================
+    // CONSOLE LAYOUT (v2.6.1)
+    // ============================================================================
+    // Default: the flowing arrangement. Layout 1 / Layout 2: every resource ('r<id>'), page
+    // ('p<id>') and the control area ('mc') sits at a saved x/y on an 8px grid, measured from
+    // the top-left corner of the console area under the header.
+
+    const LAYOUT_GRID = 8;
+    const LAYOUT_GAP = 16;
+    const LAYOUT_CONTROL_MIN_W = 320;
+    const LAYOUT_CONTROL_DEFAULT_W = 640;
+    // Width and height of each card size in a saved layout (matches the layout-custom CSS).
+    const LAYOUT_NOMINAL = { rlarge: [400, 224], rsmall: [296, 152], plarge: [144, 168], psmall: [104, 96] };
+
+    let layoutProfiles = [null, null];   // Layout 1, Layout 2: { items: { key: {x, y} }, controlWidth, savedAt }
+    let activeLayout = 0;                // 0 = Default, 1 or 2 = that saved layout is in use
+    let layoutEdit = null;               // while editing: { slot, items, controlWidth }
+    let layoutDrag = null;
+    let layoutExtentRaf = 0;
+    let layoutSaveTimer = null;
+
+    // Card size: 'large' (default) or 'small', set per resource and per page in their editors.
+    function cardSizeKey(v) { return v === 'small' ? 'small' : 'large'; }
+    const editingCardSize = { resource: 'large', page: 'large' };
+    function pickCardSize(group, size) {
+        editingCardSize[group] = cardSizeKey(size);
+        document.querySelectorAll(`[data-size-group="${group}"] .size-option`).forEach(b => {
+            b.setAttribute('aria-checked', b.dataset.size === editingCardSize[group] ? 'true' : 'false');
+        });
+    }
+
+    function layoutName(slot) { return slot ? `Layout ${slot}` : 'Default'; }
+    function snapLayout(v) { return Math.max(0, Math.round(v / LAYOUT_GRID) * LAYOUT_GRID); }
+    function cloneLayout(v) { return JSON.parse(JSON.stringify(v)); }
+
+    // The arrangement on screen: the one being edited, the saved one in use, or null (Default).
+    function currentLayout() {
+        if (layoutEdit) return layoutEdit;
+        return activeLayout ? layoutProfiles[activeLayout - 1] : null;
+    }
+
+    function sanitizeLayoutProfiles(raw) {
+        const out = [null, null];
+        if (!Array.isArray(raw)) return out;
+        for (let i = 0; i < 2; i++) {
+            const p = raw[i];
+            if (!p || typeof p !== 'object' || !p.items || typeof p.items !== 'object') continue;
+            const items = {};
+            Object.keys(p.items).forEach(k => {
+                const pos = p.items[k];
+                if (!/^(mc|r\d+|p\d+)$/.test(k) || !pos) return;
+                const x = Number(pos.x), y = Number(pos.y);
+                if (Number.isFinite(x) && Number.isFinite(y)) items[k] = { x: snapLayout(x), y: snapLayout(y) };
+            });
+            const w = Number(p.controlWidth);
+            out[i] = {
+                items,
+                controlWidth: Number.isFinite(w) ? Math.max(LAYOUT_CONTROL_MIN_W, snapLayout(w)) : LAYOUT_CONTROL_DEFAULT_W,
+                savedAt: Number(p.savedAt) || Date.now()
+            };
+        }
+        return out;
+    }
+
+    function restoreActiveLayout(n) {
+        return (n === 1 || n === 2) && layoutProfiles[n - 1] ? n : 0;
+    }
+
+    // Forget the positions of resources and pages that no longer exist.
+    function pruneLayoutProfiles() {
+        const keep = new Set(['mc', ...resources.map(r => 'r' + r.id), ...pages.map(p => 'p' + p.id)]);
+        [layoutProfiles[0], layoutProfiles[1], layoutEdit].forEach(l => {
+            if (!l || !l.items) return;
+            Object.keys(l.items).forEach(k => { if (!keep.has(k)) delete l.items[k]; });
+        });
+    }
+
+    // Width and height an item takes up in a layout (used to find room for a new one).
+    function layoutItemSize(key, lay) {
+        if (key === 'mc') {
+            const mc = document.getElementById('masterControls');
+            return [lay.controlWidth || LAYOUT_CONTROL_DEFAULT_W, Math.max(mc ? mc.offsetHeight : 0, 200)];
+        }
+        if (key[0] === 'r') {
+            const r = resources.find(x => 'r' + x.id === key);
+            return LAYOUT_NOMINAL['r' + cardSizeKey(r && r.cardSize)];
+        }
+        const p = pages.find(x => 'p' + x.id === key);
+        return LAYOUT_NOMINAL['p' + cardSizeKey(p && p.cardSize)];
+    }
+
+    // First free spot, top to bottom and left to right, beside or under what is already placed.
+    function findFreeLayoutSpot(key, lay) {
+        const [w, h] = layoutItemSize(key, lay);
+        const placed = Object.keys(lay.items).filter(k => k !== key).map(k => {
+            const [iw, ih] = layoutItemSize(k, lay);
+            return { x: lay.items[k].x, y: lay.items[k].y, w: iw, h: ih };
+        });
+        const limit = Math.max(w + 2 * LAYOUT_GAP, document.documentElement.clientWidth - LAYOUT_GAP);
+        const uniq = a => [...new Set(a.map(snapLayout))].sort((m, n) => m - n);
+        const xs = uniq([LAYOUT_GAP, ...placed.map(o => o.x + o.w + LAYOUT_GAP)]);
+        const ys = uniq([LAYOUT_GAP, ...placed.map(o => o.y + o.h + LAYOUT_GAP)]);
+        const fits = (x, y) => placed.every(o =>
+            x + w + LAYOUT_GAP <= o.x || o.x + o.w + LAYOUT_GAP <= x || y + h + LAYOUT_GAP <= o.y || o.y + o.h + LAYOUT_GAP <= y);
+        for (const y of ys) {
+            for (const x of xs) {
+                if (x + w <= limit && fits(x, y)) return { x, y };
+            }
+        }
+        const bottom = placed.reduce((m, o) => Math.max(m, o.y + o.h), 0);
+        return { x: LAYOUT_GAP, y: snapLayout(bottom + LAYOUT_GAP) };
+    }
+
+    // Where key sits in the current layout. Something new (a resource or page added after the
+    // layout was saved) is given the first free spot, and that spot is kept.
+    function layoutPos(key) {
+        const lay = currentLayout();
+        if (!lay) return null;
+        if (!lay.items) lay.items = {};
+        if (!lay.items[key]) {
+            lay.items[key] = findFreeLayoutSpot(key, lay);
+            if (!layoutEdit) scheduleLayoutSave();
+        }
+        return lay.items[key];
+    }
+
+    function scheduleLayoutSave() {
+        if (layoutSaveTimer) return;
+        layoutSaveTimer = setTimeout(() => { layoutSaveTimer = null; saveToLocalStorage(); }, 0);
+    }
+
+    // Called for each resource and page card as it is built.
+    function decorateLayoutItem(el, key, opts = {}) {
+        el.classList.add('layout-item');
+        el.dataset.layoutKey = key;
+        const pos = layoutPos(key);
+        if (!pos) return;
+        el.style.left = pos.x + 'px';
+        el.style.top = pos.y + 'px';
+        if (opts.raised) el.classList.add('layout-raised');       // open activity log goes over its neighbours
+        if (opts.top) el.classList.add('layout-raised-top');      // open channel list, above that
+        if (layoutEdit) {
+            // While editing, the card's own controls are locked; a shield on top takes the drag.
+            [...el.children].forEach(c => { c.inert = true; });
+            el.appendChild(makeLayoutShield(opts.label || ''));
+            if (layoutDrag && layoutDrag.key === key) el.classList.add('layout-dragging');
+        }
+    }
+
+    function makeLayoutShield(label) {
+        const sh = document.createElement('div');
+        sh.className = 'layout-shield';
+        sh.tabIndex = 0;
+        sh.setAttribute('role', 'button');
+        sh.setAttribute('aria-label', `Move ${label}`);
+        sh.innerHTML = '<span class="layout-grip" aria-hidden="true"><i class="fas fa-up-down-left-right"></i></span>';
+        return sh;
+    }
+
+    function layoutItemEls() { return [...document.querySelectorAll('#consoleMain .layout-item')]; }
+    function layoutItemEl(key) { return document.querySelector(`#consoleMain .layout-item[data-layout-key="${key}"]`); }
+
+    // Put the control area where the current layout says, switch the page between Default and
+    // a placed layout, and show or hide the Edit Layout bar. Cards place themselves as they are
+    // built, so call refreshLayout() when the layout itself changes.
+    function applyLayout() {
+        const lay = currentLayout();
+        document.body.classList.toggle('layout-custom', !!lay);
+        document.body.classList.toggle('layout-editing', !!layoutEdit);
+        const mc = document.getElementById('masterControls');
+        if (lay) {
+            const pos = layoutPos('mc');
+            mc.style.left = pos.x + 'px';
+            mc.style.top = pos.y + 'px';
+            mc.style.width = (lay.controlWidth || LAYOUT_CONTROL_DEFAULT_W) + 'px';
+        } else {
+            mc.style.left = mc.style.top = mc.style.width = '';
+        }
+        [...mc.children].forEach(c => {
+            if (!c.classList.contains('layout-shield') && !c.classList.contains('layout-resize')) c.inert = !!layoutEdit;
+        });
+        if (!layoutEdit) mc.classList.remove('layout-overlap', 'layout-dragging');
+        document.getElementById('layoutEditBar').classList.toggle('hidden', !layoutEdit);
+        if (layoutEdit) {
+            document.getElementById('layoutEditName').textContent = layoutName(layoutEdit.slot);
+            document.getElementById('layoutSaveLabel').textContent = `Save ${layoutName(layoutEdit.slot)}`;
+        }
+        updateConfigMenuState();
+        scheduleLayoutExtent();
+    }
+
+    function refreshLayout() {
+        applyLayout();
+        renderResources();
+        renderPages();
+    }
+
+    function scheduleLayoutExtent() {
+        if (layoutExtentRaf) return;
+        layoutExtentRaf = requestAnimationFrame(() => { layoutExtentRaf = 0; updateLayoutExtent(); });
+    }
+
+    // Placed items don't take up space on their own, so size the console area to hold them
+    // (with room to drag further down while editing), and outline overlaps while editing.
+    function updateLayoutExtent() {
+        const main = document.getElementById('consoleMain');
+        if (!currentLayout()) {
+            main.style.minHeight = '';
+            main.style.minWidth = '';
+            return;
+        }
+        let right = 0, bottom = 0;
+        const boxes = layoutItemEls().map(el => {
+            const b = { el, x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
+            right = Math.max(right, b.x + b.w);
+            bottom = Math.max(bottom, b.y + b.h);
+            return b;
+        });
+        main.style.minHeight = (layoutEdit
+            ? Math.max(bottom + 320, window.innerHeight - main.offsetTop)
+            : bottom + 24) + 'px';
+        // Only as wide as the furthest item, so something placed at the window's edge doesn't
+        // add a sideways scrollbar.
+        main.style.minWidth = right + 'px';
+        if (layoutEdit) markLayoutOverlaps(boxes);
+    }
+
+    function markLayoutOverlaps(boxes) {
+        const hit = new Set();
+        for (let i = 0; i < boxes.length; i++) {
+            for (let j = i + 1; j < boxes.length; j++) {
+                const a = boxes[i], b = boxes[j];
+                if (a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h) {
+                    hit.add(a.el);
+                    hit.add(b.el);
+                }
+            }
+        }
+        boxes.forEach(b => b.el.classList.toggle('layout-overlap', hit.has(b.el)));
+        const warn = document.getElementById('layoutOverlapWarn');
+        warn.textContent = hit.size ? ` ${hit.size} items overlap (outlined in red).` : '';
+        warn.classList.toggle('hidden', !hit.size);
+    }
+
+    // Positions of the Default arrangement at the current window size. Placed positions are
+    // ignored by Default (see the CSS), so this only has to switch the class off to measure.
+    function measureDefaultLayout() {
+        const body = document.body;
+        const main = document.getElementById('consoleMain');
+        const hadCustom = body.classList.contains('layout-custom');
+        body.classList.remove('layout-custom');
+        // The size given to a placed layout would stretch Default's centred column; drop it
+        // while measuring (the next extent update puts it back).
+        main.style.minWidth = '';
+        main.style.minHeight = '';
+        scheduleLayoutExtent();
+        const mainTop = main.getBoundingClientRect().top;
+        const items = {};
+        layoutItemEls().forEach(el => {
+            const r = el.getBoundingClientRect();
+            items[el.dataset.layoutKey] = { x: snapLayout(r.left + window.scrollX), y: snapLayout(r.top - mainTop) };
+        });
+        const controlWidth = Math.max(LAYOUT_CONTROL_MIN_W,
+            snapLayout(document.getElementById('masterControls').getBoundingClientRect().width));
+        if (hadCustom) body.classList.add('layout-custom');
+        return { items, controlWidth };
+    }
+
+    function startLayoutEdit(slot) {
+        if (layoutEdit) return;
+        hideModal('layoutModal');
+        closeConfigMenu();
+        if (expandedChannelDropdowns.size) expandedChannelDropdowns.clear();
+        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+        // Start from the saved layout, or else from whatever is on screen now.
+        const saved = layoutProfiles[slot - 1];
+        const cur = currentLayout();
+        const base = saved ? cloneLayout(saved)
+            : cur ? { items: cloneLayout(cur.items || {}), controlWidth: cur.controlWidth }
+            : measureDefaultLayout();
+        layoutEdit = { slot, items: base.items || {}, controlWidth: base.controlWidth || LAYOUT_CONTROL_DEFAULT_W };
+        refreshLayout();
+    }
+
+    function endLayoutEdit() {
+        stopLayoutDrag();
+        layoutEdit = null;
+        refreshLayout();
+    }
+
+    function saveLayoutEdit() {
+        if (!layoutEdit) return;
+        const slot = layoutEdit.slot;
+        layoutProfiles[slot - 1] = { items: cloneLayout(layoutEdit.items), controlWidth: layoutEdit.controlWidth, savedAt: Date.now() };
+        activeLayout = slot;
+        endLayoutEdit();
+        saveToLocalStorage();
+    }
+
+    function cancelLayoutEdit() {
+        if (layoutEdit) endLayoutEdit();
+    }
+
+    // Put everything back where the Default arrangement would have it.
+    function autoArrangeLayout() {
+        if (!layoutEdit) return;
+        const m = measureDefaultLayout();
+        layoutEdit.items = m.items;
+        layoutEdit.controlWidth = m.controlWidth;
+        refreshLayout();
+    }
+
+    function useLayout(slot) {
+        if (layoutEdit) return;
+        if (slot && !layoutProfiles[slot - 1]) return;
+        activeLayout = slot;
+        refreshLayout();
+        saveToLocalStorage();
+        renderLayoutMenu();
+    }
+
+    function clearLayoutSlot(slot) {
+        if (!layoutProfiles[slot - 1]) return;
+        const note = activeLayout === slot ? ' The console goes back to the Default layout.' : '';
+        showConfirmDialog(`Delete ${layoutName(slot)}?`, `${layoutName(slot)} will be deleted.${note}`, () => {
+            layoutProfiles[slot - 1] = null;
+            if (activeLayout === slot) {
+                activeLayout = 0;
+                refreshLayout();
+            }
+            saveToLocalStorage();
+            renderLayoutMenu();
+        });
+    }
+
+    function formatLayoutSaved(ts) {
+        const d = new Date(ts);
+        return `Saved ${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}, ` +
+               d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+    }
+
+    function renderLayoutMenu() {
+        const inUse = '<span class="layout-badge"><i class="fas fa-check"></i>In use</span>';
+        let html = `
+            <div class="layout-slot ${activeLayout === 0 ? 'is-active' : ''}" data-layout-slot="0">
+                <div class="layout-slot-head">
+                    <div class="min-w-0">
+                        <div class="layout-slot-name">Default</div>
+                        <div class="layout-slot-meta">Arranged automatically to fit the window.</div>
+                    </div>
+                    ${activeLayout === 0 ? inUse : '<button type="button" class="btn btn-secondary" onclick="useLayout(0)">Use Default</button>'}
+                </div>
+            </div>`;
+        [1, 2].forEach(slot => {
+            const p = layoutProfiles[slot - 1];
+            const active = activeLayout === slot;
+            const name = layoutName(slot);
+            html += `
+            <div class="layout-slot ${active ? 'is-active' : ''}" data-layout-slot="${slot}">
+                <div class="layout-slot-head">
+                    <div class="min-w-0">
+                        <div class="layout-slot-name">${name}</div>
+                        <div class="layout-slot-meta">${p ? formatLayoutSaved(p.savedAt) : 'Not saved yet'}</div>
+                    </div>
+                    ${active ? inUse : ''}
+                </div>
+                <div class="layout-slot-actions">
+                    ${p ? `
+                    ${active ? '' : `<button type="button" class="btn btn-secondary" onclick="useLayout(${slot})"><i class="fas fa-folder-open"></i>Recall</button>`}
+                    <button type="button" class="btn btn-primary" onclick="startLayoutEdit(${slot})"><i class="fas fa-pen"></i>Edit</button>
+                    <button type="button" class="btn btn-secondary btn-icon" onclick="clearLayoutSlot(${slot})" title="Delete ${name}" aria-label="Delete ${name}"><i class="fas fa-trash"></i></button>
+                    ` : `
+                    <button type="button" class="btn btn-primary" onclick="startLayoutEdit(${slot})"><i class="fas fa-plus"></i>Create ${name}</button>`}
+                </div>
+            </div>`;
+        });
+        document.getElementById('layoutSlotList').innerHTML = html;
+    }
+
+    function openLayoutMenu() {
+        closeConfigMenu();
+        if (layoutEdit) return;
+        renderLayoutMenu();
+        showModal('layoutModal');
+    }
+
+    // Console Configuration menu in the header
+    function toggleConfigMenu(force) {
+        const menu = document.getElementById('consoleConfigMenu');
+        const open = force !== undefined ? force : menu.classList.contains('hidden');
+        menu.classList.toggle('hidden', !open);
+        document.getElementById('consoleConfigBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (open) updateConfigMenuState();
+    }
+
+    function closeConfigMenu() {
+        const menu = document.getElementById('consoleConfigMenu');
+        if (!menu || menu.classList.contains('hidden')) return false;
+        toggleConfigMenu(false);
+        return true;
+    }
+
+    function updateConfigMenuState() {
+        document.getElementById('configMenuLayoutName').textContent = layoutEdit ? 'Editing' : layoutName(activeLayout);
+        document.getElementById('editLayoutBtn').disabled = !!layoutEdit;
+    }
+
+    // Dragging (mouse, pen or touch) and arrow-key nudging while editing
+    function onLayoutPointerDown(e) {
+        if (!layoutEdit || layoutDrag) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        const handle = e.target.closest('.layout-shield, .layout-resize');
+        const el = handle && handle.closest('.layout-item');
+        if (!el) return;
+        e.preventDefault();
+        const key = el.dataset.layoutKey;
+        const pos = layoutPos(key);
+        layoutDrag = {
+            key,
+            pointerId: e.pointerId,
+            mode: handle.classList.contains('layout-resize') ? 'resize' : 'move',
+            startX: e.clientX + window.scrollX,
+            startY: e.clientY + window.scrollY,
+            x0: pos.x,
+            y0: pos.y,
+            w0: layoutEdit.controlWidth
+        };
+        el.classList.add('layout-dragging');
+        try { handle.setPointerCapture(e.pointerId); } catch (_) { /* element may be gone */ }
+        window.addEventListener('pointermove', onLayoutPointerMove);
+        window.addEventListener('pointerup', onLayoutPointerUp);
+        window.addEventListener('pointercancel', onLayoutPointerUp);
+    }
+
+    function onLayoutPointerMove(e) {
+        if (!layoutDrag || !layoutEdit || e.pointerId !== layoutDrag.pointerId) return;
+        const dx = e.clientX + window.scrollX - layoutDrag.startX;
+        const dy = e.clientY + window.scrollY - layoutDrag.startY;
+        const el = layoutItemEl(layoutDrag.key);
+        if (layoutDrag.mode === 'resize') {
+            const w = Math.max(LAYOUT_CONTROL_MIN_W, snapLayout(layoutDrag.w0 + dx));
+            if (w !== layoutEdit.controlWidth) {
+                layoutEdit.controlWidth = w;
+                if (el) el.style.width = w + 'px';
+                scheduleLayoutExtent();
+            }
+            return;
+        }
+        const pos = layoutEdit.items[layoutDrag.key];
+        const x = snapLayout(layoutDrag.x0 + dx);
+        const y = snapLayout(layoutDrag.y0 + dy);
+        if (!pos || (x === pos.x && y === pos.y)) return;
+        pos.x = x;
+        pos.y = y;
+        if (el) {
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+        }
+        scheduleLayoutExtent();
+    }
+
+    function onLayoutPointerUp(e) {
+        if (!layoutDrag || (e && e.pointerId !== layoutDrag.pointerId)) return;
+        stopLayoutDrag();
+    }
+
+    function stopLayoutDrag() {
+        window.removeEventListener('pointermove', onLayoutPointerMove);
+        window.removeEventListener('pointerup', onLayoutPointerUp);
+        window.removeEventListener('pointercancel', onLayoutPointerUp);
+        if (!layoutDrag) return;
+        const el = layoutItemEl(layoutDrag.key);
+        if (el) el.classList.remove('layout-dragging');
+        layoutDrag = null;
+        scheduleLayoutExtent();
+    }
+
+    function onLayoutKeyDown(e) {
+        if (!layoutEdit) return;
+        const sh = e.target.closest && e.target.closest('.layout-shield');
+        if (!sh) return;
+        const step = e.shiftKey ? LAYOUT_GRID * 4 : LAYOUT_GRID;
+        const d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+        if (!d) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const el = sh.closest('.layout-item');
+        const pos = layoutPos(el.dataset.layoutKey);
+        pos.x = snapLayout(pos.x + d[0]);
+        pos.y = snapLayout(pos.y + d[1]);
+        el.style.left = pos.x + 'px';
+        el.style.top = pos.y + 'px';
+        scheduleLayoutExtent();
+    }
+
+    function initLayoutEditing() {
+        const main = document.getElementById('consoleMain');
+        main.addEventListener('pointerdown', onLayoutPointerDown);
+        main.addEventListener('keydown', onLayoutKeyDown);
+        // While editing, nothing inside a card or the control area reacts to a press: no
+        // transmit, no page, no selection. The shields take the drag; this stops everything
+        // else, including the card's own touch and mouse handlers under a shield.
+        ['mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu', 'touchstart', 'touchend'].forEach(type => {
+            document.addEventListener(type, (e) => {
+                if (!layoutEdit || !e.target.closest || !e.target.closest('#consoleMain .layout-item')) return;
+                e.stopPropagation();
+                if (e.cancelable) e.preventDefault();
+            }, { capture: true, passive: false });
+        });
+        document.addEventListener('pointerdown', (e) => {
+            if (!layoutEdit || !e.target.closest) return;
+            if (e.target.closest('#consoleMain .layout-item') && !e.target.closest('.layout-shield, .layout-resize')) {
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }, true);
+        window.addEventListener('resize', scheduleLayoutExtent);
+    }
+
+    // ============================================================================
     // LOCAL STORAGE
     // ============================================================================
 
     function saveToLocalStorage() {
+        pruneLayoutProfiles();
         const data = {
             consoleName,
             currentTheme,
@@ -8244,12 +9146,15 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 selected: r.selected,
                 priority: r.priority,
                 patch: r.patch,
-                moduleFilters: r.moduleFilters || null
+                moduleFilters: r.moduleFilters || null,
+                cardSize: cardSizeKey(r.cardSize)
             })),
             nextResourceId,
             nextChannelId,
             pages,
-            nextPageId
+            nextPageId,
+            layoutProfiles,
+            activeLayout
         };
 
         try {
@@ -8315,6 +9220,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 pages = data.pages;
                 nextPageId = data.nextPageId || 1;
             }
+
+            layoutProfiles = sanitizeLayoutProfiles(data.layoutProfiles);
+            activeLayout = restoreActiveLayout(data.activeLayout);
 
         } catch (e) {
             console.error('Failed to load from localStorage:', e);
@@ -8382,9 +9290,18 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         alert2Btn.addEventListener('touchstart', (e) => { e.preventDefault(); pointerPttDown('alert2', () => { initAudioContext(); startAlertTone2(); }); }, { passive: false });
         alert2Btn.addEventListener('touchend', (e) => { e.preventDefault(); pointerPttUp('alert2', stopAlertTone2); }, { passive: false });
 
-        // Add buttons
+        // Console Configuration menu (v2.6.1): Add Resource, Add Page, Edit Layout
         document.getElementById('addResourceBtn').addEventListener('click', addResource);
         document.getElementById('addPageBtn').addEventListener('click', addPage);
+        document.getElementById('editLayoutBtn').addEventListener('click', openLayoutMenu);
+        document.getElementById('consoleConfigBtn').addEventListener('click', (e) => { e.stopPropagation(); toggleConfigMenu(); });
+        document.getElementById('consoleConfigMenu').addEventListener('click', (e) => {
+            if (e.target.closest('.config-menu-item')) closeConfigMenu();
+        });
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#consoleConfigWrap')) closeConfigMenu();
+        });
+        initLayoutEditing();
 
         // Modal buttons
         document.getElementById('settingsBtn').addEventListener('click', () => { populateSettingsForm(); updateStorageIndicator(); showModal('settingsModal'); });
@@ -8421,7 +9338,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             // It returns immediately either way, so on the main screen it does nothing —
             // no PTT, no unselect, no tone.
             if (e.key === 'Escape') {
-                if (closeTopModal()) e.preventDefault();
+                if (closeConfigMenu() || closeTopModal()) e.preventDefault();
                 return;
             }
 
@@ -8498,11 +9415,10 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         initUI();
         initEventListeners();
         updateClockDisplay();
-        renderResources();
-        renderPages();
+        refreshLayout();
         loadRecordingsFromDB(); // restore persisted activity-log recordings
 
-        console.log('Common Dispatch Console v2.6 initialized');
+        console.log('Common Dispatch Console v2.6.1 initialized');
     });
     </script>
 </body>
