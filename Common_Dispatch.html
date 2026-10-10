@@ -1251,10 +1251,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <div>
                         <label class="label" id="resourceSizeLabel">Card Size</label>
                         <div class="size-options" role="radiogroup" aria-labelledby="resourceSizeLabel" data-size-group="resource">
-                            <button type="button" class="size-option" data-size="large" role="radio" aria-checked="true" onclick="pickCardSize('resource', 'large')"><span class="size-glyph size-glyph-large" aria-hidden="true"></span>Large</button>
-                            <button type="button" class="size-option" data-size="small" role="radio" aria-checked="false" onclick="pickCardSize('resource', 'small')"><span class="size-glyph size-glyph-small" aria-hidden="true"></span>Small</button>
+                            <button type="button" class="size-option" data-size="small" role="radio" aria-checked="true" onclick="pickCardSize('resource', 'small')"><span class="size-glyph size-glyph-small" aria-hidden="true"></span>Small</button>
+                            <button type="button" class="size-option" data-size="large" role="radio" aria-checked="false" onclick="pickCardSize('resource', 'large')"><span class="size-glyph size-glyph-large" aria-hidden="true"></span>Large</button>
                         </div>
-                        <p class="hint">Small is a compact resource card that takes less room on the screen.</p>
+                        <p class="hint">Small is a compact resource card that takes less room on the screen. Large is the full-size card.</p>
                     </div>
 
                     <!-- Manage Channels -->
@@ -1599,10 +1599,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <div>
                         <label class="label" id="pageSizeLabel">Card Size</label>
                         <div class="size-options" role="radiogroup" aria-labelledby="pageSizeLabel" data-size-group="page">
-                            <button type="button" class="size-option" data-size="large" role="radio" aria-checked="true" onclick="pickCardSize('page', 'large')"><span class="size-glyph size-glyph-large" aria-hidden="true"></span>Large</button>
-                            <button type="button" class="size-option" data-size="small" role="radio" aria-checked="false" onclick="pickCardSize('page', 'small')"><span class="size-glyph size-glyph-small" aria-hidden="true"></span>Small</button>
+                            <button type="button" class="size-option" data-size="small" role="radio" aria-checked="true" onclick="pickCardSize('page', 'small')"><span class="size-glyph size-glyph-small" aria-hidden="true"></span>Small</button>
+                            <button type="button" class="size-option" data-size="large" role="radio" aria-checked="false" onclick="pickCardSize('page', 'large')"><span class="size-glyph size-glyph-large" aria-hidden="true"></span>Large</button>
                         </div>
-                        <p class="hint">Small is a compact page card that takes less room on the screen.</p>
+                        <p class="hint">Small is a compact page card that takes less room on the screen. Large is the full-size card.</p>
                     </div>
 
                     <div>
@@ -1842,7 +1842,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <p class="text-sm text-gray-600 dark:text-gray-400">Choose Add Resource from the Console Configuration menu (the monitor-and-gear button at the top of the screen) to create a new resource. In the resource editor, set:</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Resource Name:</strong> An internal label used for identification in logs and settings (e.g., "vhf1" or "uhf1"). This name is not shown on the main screen; the active channel's name is shown there instead.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Color:</strong> Blue, Green, Red or Yellow. The resource shows its color while unselected and turns white with a green border when selected.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Card Size:</strong> Large or Small. A small card is a compact version of the same controls: the frequency and tone share a line, and the volume slider shares its row with Priority, Patch and Edit.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Card Size:</strong> Small (the default for a new resource) or Large. A small card is a compact version of the same controls: the frequency and tone share a line, and the volume slider shares its row with Priority, Patch and Edit.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Manage Channels:</strong> Opens the channel list for this resource, where you configure the actual radio settings. A resource cannot be saved until it has at least one channel.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Important: Save a new resource first, then reopen it with the pencil icon on its card and click "Connect to Radio" to connect it.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Saved resources also have a Radio Module section for the radio module's audio filters (see Module Settings). To delete a resource, use Delete Resource at the bottom of the editor.</p>
@@ -1961,7 +1961,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </button>
                         <div id="help-pages" class="hidden px-3 pb-3">
                             <p class="text-sm text-gray-600 dark:text-gray-400">Pages are pre-configured tone sequences used to alert or activate remote equipment such as pagers, station alerting systems, or tone-activated devices. The console supports two page types: DTMF and 2-Tone.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add a page with Add Page in the Console Configuration menu. Page cards display the page name and type in the page's color, chosen in the page editor, at the card size chosen there (Large or Small). Single-click a page card to immediately transmit that page on all selected resources. Long-press (hold for 0.5 seconds) to add the page to the transmission stack without sending immediately.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add a page with Add Page in the Console Configuration menu. Page cards display the page name and type in the page's color, chosen in the page editor, at the card size chosen there (Small, the default for a new page, or Large). Single-click a page card to immediately transmit that page on all selected resources. Long-press (hold for 0.5 seconds) to add the page to the transmission stack without sending immediately.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Stacked pages turn white (dark grey in dark mode) with a green border and checkmark, the same way a selected resource does. Use the Paging button in the control area to transmit all stacked pages in sequence.</p>
                         </div>
                     </div>
@@ -7677,7 +7677,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         document.getElementById('resourceConnectionInfo').innerHTML = '<span class="text-gray-500">Status: Not Connected</span>';
         document.getElementById('resourceDeleteSection').classList.add('hidden');  // Hide delete for new resources
         pickTileColor('resource', DEFAULT_TILE_COLOR);
-        pickCardSize('resource', 'large');
+        pickCardSize('resource', DEFAULT_CARD_SIZE);
         updateResourceModuleSection();
         editingChannels = [];
         selectedChannelIds = [];
@@ -8088,7 +8088,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         document.getElementById('pageForm').reset();
         document.getElementById('pageType').value = 'dtmf';
         pickTileColor('page', DEFAULT_TILE_COLOR);
-        pickCardSize('page', 'large');
+        pickCardSize('page', DEFAULT_CARD_SIZE);
         updatePageTypeFields();
         showModal('pageModal');
     }
@@ -8611,9 +8611,12 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     let layoutExtentRaf = 0;
     let layoutSaveTimer = null;
 
-    // Card size: 'large' (default) or 'small', set per resource and per page in their editors.
+    // Card size, set per resource and per page in their editors. New ones start Small (as new
+    // ones start Blue); a card saved before sizes existed (no size stored) stays Large, so an
+    // upgraded console looks the same as before.
     function cardSizeKey(v) { return v === 'small' ? 'small' : 'large'; }
-    const editingCardSize = { resource: 'large', page: 'large' };
+    const DEFAULT_CARD_SIZE = 'small';
+    const editingCardSize = { resource: DEFAULT_CARD_SIZE, page: DEFAULT_CARD_SIZE };
     function pickCardSize(group, size) {
         editingCardSize[group] = cardSizeKey(size);
         document.querySelectorAll(`[data-size-group="${group}"] .size-option`).forEach(b => {
