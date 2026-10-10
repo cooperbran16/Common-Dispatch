@@ -20,6 +20,13 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Per-resource volume control with stereo panning (selected left, unselected right)
 - Four resource colors (Blue, Green, Red, Yellow); a selected resource turns white (dark grey in dark mode) with a green border, and an active emergency turns the border red
 
+### Console Layout
+- Console Configuration menu (the monitor-and-gear button in the header) holds Add Resource, Add Page and Edit Layout
+- Large or Small card size for each resource and page; small cards are the compact phone-style cards, so more fit on screen
+- Edit Layout: drag resources, pages and the control area anywhere on the screen, snapping to an 8-pixel grid, and drag the control area's edge to resize it
+- Two saved layouts (Layout 1 and Layout 2) to recall at any time, plus the automatic Default layout
+- Control area with equal-size Mute, Paging and Alert buttons and a full-width transmit bar
+
 ### Channels
 - Each resource holds multiple channels (up to 16), each with its own name, frequency, mode, tone, power, and bandwidth
 - Switch the active channel from a dropdown on the resource card
@@ -94,7 +101,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 
 1. **Download** `Common_Dispatch.html`
 2. **Open** the file in Chrome or Edge
-3. **Click** Add Resource
+3. **Click** the Console Configuration button (monitor with a gear) at the top and choose **Add Resource**
 4. **Name** the resource, then **add one or more channels** (frequency, tone, mode, etc.) and save
 5. **Click** the Edit button on the resource card
 6. **Select** Connect to Radio and choose the desired serial port when prompted
@@ -113,6 +120,13 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - The active channel's name is shown on the resource card
 - Click the channel dropdown to switch; you can open a resource's Activity Log while the dropdown is open to check which channel traffic arrived on
 - Manage channels (add, edit, reorder, delete) from the resource's channel manager
+
+### Arranging the Console
+- Pick Large or Small for each resource and page in its editor
+- Open Console Configuration → Edit Layout, then Create (or Edit) Layout 1 or Layout 2
+- Drag items into place (they snap to the grid); anything overlapping is outlined in red; Auto-Arrange puts everything back in the Default arrangement
+- Save to keep the layout and switch to it; Recall switches between saved layouts, and Use Default goes back to the automatic one
+- On-screen buttons are locked while you're editing, so nothing transmits by accident; receive audio and keyboard PTT keep working
 
 ### Channel Patching
 - Click the link icon on two resources to patch them together
@@ -143,6 +157,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 ### Resource & Channel Settings (Edit Icon on Resource Card)
 - **Resource Name**: Display name for the radio
 - **Color**: Blue, Green, Red or Yellow
+- **Card Size**: Large or Small
 - **Radio Module Settings**: Pre-/de-emphasis, high-pass and low-pass filters
 - **Channels** (per channel):
   - **Name**: Channel display name (shown on the card)
@@ -155,7 +170,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
   - **Bandwidth**: Narrow (12.5 kHz) or Wide (25 kHz)
 
 ### Import/Export
-- Export your complete configuration (resources, channels, aliases, pages, settings) as JSON
+- Export your complete configuration (resources, channels, aliases, pages, layouts, settings) as JSON
 - Import configuration on another browser/computer
 - Great for backup or sharing setups with others
 
