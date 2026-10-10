@@ -8,22 +8,24 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 ![Platform](https://img.shields.io/badge/platform-Web%20Browser-brightgreen.svg)
 ![Hardware](https://img.shields.io/badge/hardware-KV4P--HT-orange.svg)
 
-![Screenshot](https://github.com/cooperbran16/Common-Dispatch/blob/main/images/common_dispatch.png)
-*Common Dispatch shown with 2 resources added, both resources have a radio connected. One resource has the activity log expanded, the other is currently in selected status - indicated by the purple outline around and shading within the resource. The console is displaying the 'Dark mode' setting.*
+![Screenshot](images/common_dispatch.png)
+*Common Dispatch shown with 2 resources added, both resources have a radio connected. One resource has the activity log expanded and shows its color (blue); the other is currently selected, shown in white (dark grey in dark mode) with a green border. The console is displaying the 'Dark mode' setting.*
 
 ## Features
 
 ### Multi-Resource Management
 - Connect and control multiple KV4P-HT radios simultaneously
 - VHF (134-174 MHz) and UHF (400-480 MHz) support, with automatic module detection and frequency-mismatch warnings
-- Real-time RSSI signal strength monitoring
+- Real-time RSSI signal strength meter, scaled in S-units like the kv4p app
 - Per-resource volume control with stereo panning (selected left, unselected right)
+- Four resource colors (Blue, Green, Red, Yellow); a selected resource turns white (dark grey in dark mode) with a green border, and an active emergency turns the border red
 
 ### Channels
 - Each resource holds multiple channels (up to 16), each with its own name, frequency, mode, tone, power, and bandwidth
 - Switch the active channel from a dropdown on the resource card
 - Add, edit, reorder, and delete channels in a dedicated channel manager
 - Simplex and half-duplex (split TX/RX) operation
+- Per-channel transmit power (high/low), applied every time the channel is switched
 - Switching is blocked while transmitting and warns if a channel doesn't match the connected radio's band
 
 ### Audio & Communication
@@ -33,12 +35,17 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Console ID transmission (send a DTMF identifier with each transmission)
 - VU meter for transmit audio monitoring
 
+### Radio Module Settings
+- Pre-/de-emphasis, high-pass and low-pass audio filters in the radio module, set per resource
+- Changes take effect immediately and are re-applied every time the radio connects
+
 ### Paging & Alerting
 - Two-tone sequential paging (fire/EMS style)
 - DTMF paging support
 - Emergency alert detection with configurable trigger codes
 - Visual and audible emergency notifications (alerts show the channel the call came in on)
 - Priority tone transmission
+- Pages use the same four colors as resources
 
 ### Activity Recording & Logging
 - Automatic recording of received and transmitted traffic — including alert tones and two-tone/DTMF pages
@@ -57,7 +64,8 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Light/Dark theme support
 
 ### User Experience
-- Clean, responsive interface
+- Clean, responsive interface with uniform buttons, fields, switches and dialogs
+- Escape closes the topmost open window
 - Real-time clock display (12/24 hour format)
 - Configuration import/export (JSON)
 - Runs fully offline — all assets are bundled into the single HTML file
@@ -89,15 +97,15 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 3. **Click** Add Resource
 4. **Name** the resource, then **add one or more channels** (frequency, tone, mode, etc.) and save
 5. **Click** the Edit button on the resource card
-6. **Select** Connect to KV4P-HT and choose the desired serial port when prompted
-7. **Click** the resource card to select it (purple highlight)
+6. **Select** Connect to Radio and choose the desired serial port when prompted
+7. **Click** the resource card to select it (it turns white, or dark grey in dark mode, with a green border)
 8. If the resource has more than one channel, **pick the active channel** from the dropdown
 9. **Hold** the PTT button or press your configured PTT key to transmit
 
 ## Usage Tips
 
 ### Selecting Resources
-- Click a resource card to select it (purple highlight, audio pans left)
+- Click a resource card to select it (white or dark grey with a green border, audio pans left)
 - Selected resources play at full volume; unselected play at reduced volume (configurable)
 - Multiple resources can be selected simultaneously
 
@@ -127,12 +135,15 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - **Console Name**: Customize the header title
 - **Theme**: Light, Dark, or System default
 - **Clock**: Show/hide, 12/24 hour format
+- **Show RSSI**: Show or hide the signal strength meter on resource cards
 - **Selected/Unselected Volume**: Default volume levels
 - **Console ID**: DTMF string sent with transmissions
 - **Activity Logs**: Download all recordings (zip), delete all, and view storage usage
 
 ### Resource & Channel Settings (Edit Icon on Resource Card)
 - **Resource Name**: Display name for the radio
+- **Color**: Blue, Green, Red or Yellow
+- **Radio Module Settings**: Pre-/de-emphasis, high-pass and low-pass filters
 - **Channels** (per channel):
   - **Name**: Channel display name (shown on the card)
   - **Frequency**: Receive frequency in MHz
@@ -153,6 +164,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Web Serial API requires Chrome, Edge, or Opera (Firefox/Safari not supported)
 - USB serial connection required (no network/remote operation)
 - Activity-log recordings are stored per browser; use the JSON export and the activity-log zip download to move data between machines
+- With pre-/de-emphasis on, DTMF decoding (caller ID and emergency triggers) can be less reliable
 
 ## Troubleshooting
 
