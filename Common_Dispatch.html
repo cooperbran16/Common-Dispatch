@@ -548,8 +548,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         /* === CONTROL AREA (v2.6.1) ===
            Levels on the left, four equal buttons beside them and a full-width transmit bar
-           underneath. The control area is a size container, so it rearranges itself when a
-           layout makes it narrow. */
+           underneath. The control area is a size container, so in a narrow window its
+           buttons move under the sliders. */
         #masterControls { container-type: inline-size; margin-bottom: 1.5rem; padding: 1rem; }
         .mc-top { display: flex; gap: 0.75rem; align-items: stretch; }
         .mc-levels { flex: 0 0 15rem; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 0.5rem; }
@@ -659,102 +659,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         }
         .config-menu-item > i { width: 1.25rem; text-align: center; color: #5D5CDE; }
         .dark .config-menu-item > i { color: #8b8aeb; }
-        .config-menu-item:hover:not(:disabled), .config-menu-item:focus-visible { background-color: #f3f4f6; outline: none; }
-        .dark .config-menu-item:hover:not(:disabled), .dark .config-menu-item:focus-visible { background-color: #374151; }
-        .config-menu-item:disabled { opacity: 0.5; cursor: not-allowed; }
-        .config-menu-meta { margin-left: auto; padding-left: 0.75rem; font-size: 0.75rem; font-weight: 400; color: #6b7280; }
-        .dark .config-menu-meta { color: #9ca3af; }
-        .config-menu-sep { height: 1px; margin: 0.375rem 0.25rem; background-color: #e5e7eb; }
-        .dark .config-menu-sep { background-color: #374151; }
+        .config-menu-item:hover, .config-menu-item:focus-visible { background-color: #f3f4f6; outline: none; }
+        .dark .config-menu-item:hover, .dark .config-menu-item:focus-visible { background-color: #374151; }
 
-        /* === LAYOUTS (v2.6.1) ===
-           Default: the flowing arrangement above. Layout 1 / 2: every resource, page and the
-           control area is placed at a saved spot on an 8px grid. The two grids become
-           display: contents so their cards are positioned against the console area itself. */
-        body:not(.layout-custom) .layout-item { left: auto !important; top: auto !important; }
-        body:not(.layout-custom) #masterControls { width: auto !important; }
-        body.layout-custom #consoleMain { max-width: none; margin: 0; padding: 0; position: relative; }
-        body.layout-custom #resourcesGrid, body.layout-custom #pagesGrid { display: contents; }
-        body.layout-custom .resources-empty { display: none; }
-        body.layout-custom .layout-item {
-            position: absolute; margin: 0;
-            /* cards fade their colors, but don't slide: a placed item goes straight to its spot */
-            transition-property: color, background-color, border-color, box-shadow, opacity;
-        }
-        body.layout-custom #masterControls { margin: 0; }
-        body.layout-custom [data-resource-id] { display: flex; flex-direction: column; }
-        body.layout-custom [data-resource-id] > .rc-body { flex: 1 1 auto; }
-        body.layout-custom .rc-large { width: 400px; min-height: 224px; }
-        body.layout-custom .rc-small { width: 296px; min-height: 152px; }
-        body.layout-custom .pg-large { width: 144px; min-height: 168px; }
-        body.layout-custom .pg-small { width: 104px; min-height: 96px; }
-        body.layout-custom .layout-raised { z-index: 20; }
-        body.layout-custom .layout-raised-top { z-index: 25; }
-
-        /* Edit Layout mode */
-        .layout-shield, .layout-resize { display: none; }
-        body.layout-editing #consoleMain {
-            background-image:
-                linear-gradient(to right, rgba(93, 92, 222, 0.18) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(93, 92, 222, 0.18) 1px, transparent 1px),
-                linear-gradient(to right, rgba(93, 92, 222, 0.07) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(93, 92, 222, 0.07) 1px, transparent 1px);
-            background-size: 64px 64px, 64px 64px, 8px 8px, 8px 8px;
-        }
-        body.layout-editing .layout-item { overflow: visible !important; user-select: none; -webkit-user-select: none; }
-        body.layout-editing .activity-log.expanded { max-height: 0 !important; overflow: hidden !important; }
-        body.layout-editing .rc-compact .activity-log { margin-top: 0; padding-top: 0; border-top-width: 0; }
-        body.layout-editing .layout-shield {
-            display: block; position: absolute; inset: -2px; z-index: 6; cursor: grab; touch-action: none;
-            border-radius: 0.6rem; outline: 2px dashed #5D5CDE; outline-offset: -1px; background-color: rgba(93, 92, 222, 0.10);
-        }
-        body.layout-editing .layout-shield:hover, body.layout-editing .layout-shield:focus-visible { background-color: rgba(93, 92, 222, 0.20); outline-style: solid; }
-        body.layout-editing .layout-dragging { z-index: 30 !important; box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35); }
-        body.layout-editing .layout-dragging > .layout-shield { cursor: grabbing; outline-style: solid; }
-        body.layout-editing .layout-overlap > .layout-shield { outline-color: #ef4444; background-color: rgba(239, 68, 68, 0.16); }
-        .layout-grip {
-            position: absolute; top: 0.375rem; right: 0.375rem; width: 1.5rem; height: 1.5rem; border-radius: 0.375rem;
-            display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
-            background-color: #5D5CDE; color: #ffffff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); pointer-events: none;
-        }
-        .layout-overlap > .layout-shield .layout-grip { background-color: #ef4444; }
-        .pg-small > .layout-shield .layout-grip { top: 0.25rem; right: 0.25rem; width: 1.25rem; height: 1.25rem; font-size: 0.625rem; }
-        body.layout-editing .layout-resize {
-            display: flex; align-items: center; justify-content: center; position: absolute; z-index: 7;
-            top: 0; bottom: 0; right: -0.625rem; width: 1.25rem; cursor: ew-resize; touch-action: none;
-        }
-        .layout-resize::after { content: ''; width: 0.375rem; height: 3rem; border-radius: 9999px; background-color: #5D5CDE; box-shadow: 0 0 0 2px #ffffff; }
-        .dark .layout-resize::after { box-shadow: 0 0 0 2px #111827; }
-        .layout-editbar {
-            position: sticky; top: 0; z-index: 40; background-color: #eef2ff; border-bottom: 1px solid #c7d2fe;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        .dark .layout-editbar { background-color: #1e1b4b; border-bottom-color: #3730a3; }
-        .layout-editbar-inner { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding: 0.625rem 1rem; }
-        .layout-editbar-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; white-space: nowrap; }
-        .layout-editbar-title > i { color: #5D5CDE; }
-        .dark .layout-editbar-title > i { color: #a5b4fc; }
-        .layout-editbar-hint { flex: 1 1 18rem; min-width: 0; font-size: 0.8125rem; line-height: 1.125rem; color: #4b5563; }
-        .dark .layout-editbar-hint { color: #c7d2fe; }
-        .layout-editbar-warn { color: #dc2626; font-weight: 600; }
-        .dark .layout-editbar-warn { color: #f87171; }
-        .layout-editbar-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-left: auto; }
-
-        /* Edit Layout menu */
-        .layout-slot { border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 0.75rem; }
-        .dark .layout-slot { border-color: #374151; }
-        .layout-slot.is-active { border-color: #22c55e; box-shadow: 0 0 0 1px #22c55e; }
-        .layout-slot-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
-        .layout-slot-name { font-weight: 600; }
-        .layout-slot-meta { font-size: 0.8125rem; color: #6b7280; }
-        .dark .layout-slot-meta { color: #9ca3af; }
-        .layout-slot-actions { display: flex; gap: 0.5rem; margin-top: 0.625rem; }
-        .layout-slot-actions > .btn:not(.btn-icon) { flex: 1 1 0%; }
-        .layout-badge {
-            display: inline-flex; align-items: center; gap: 0.375rem; flex-shrink: 0; padding: 0.125rem 0.5rem; border-radius: 9999px;
-            font-size: 0.75rem; font-weight: 600; background-color: #dcfce7; color: #166534;
-        }
-        .dark .layout-badge { background-color: #14532d; color: #bbf7d0; }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
@@ -769,7 +676,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <div id="clockDisplay" class="hidden text-lg font-mono font-semibold px-3 py-1.5 bg-white bg-opacity-15 rounded-lg">
                     <i class="fas fa-clock mr-1.5"></i><span id="clockTime">12:00:00</span>
                 </div>
-                <!-- Console Configuration (v2.6.1): Add Resource, Add Page, Edit Layout -->
+                <!-- Console Configuration (v2.6.1): Add Resource, Add Page -->
                 <div class="relative" id="consoleConfigWrap">
                     <button id="consoleConfigBtn" class="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors" title="Console Configuration"
                             aria-label="Console Configuration" aria-haspopup="menu" aria-expanded="false" aria-controls="consoleConfigMenu">
@@ -779,8 +686,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <div class="config-menu-title">Console Configuration</div>
                         <button type="button" id="addResourceBtn" class="config-menu-item" role="menuitem"><i class="fas fa-walkie-talkie"></i><span>Add Resource</span></button>
                         <button type="button" id="addPageBtn" class="config-menu-item" role="menuitem"><i class="fas fa-pager"></i><span>Add Page</span></button>
-                        <div class="config-menu-sep" role="separator"></div>
-                        <button type="button" id="editLayoutBtn" class="config-menu-item" role="menuitem"><i class="fas fa-table-cells-large"></i><span>Edit Layout</span><span id="configMenuLayoutName" class="config-menu-meta">Default</span></button>
                     </div>
                 </div>
                 <!-- Radio Aliases Button -->
@@ -804,26 +709,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     </header>
 
-    <!-- Edit Layout bar (v2.6.1): shown while a layout is being arranged -->
-    <div id="layoutEditBar" class="layout-editbar hidden" role="region" aria-label="Edit Layout">
-        <div class="layout-editbar-inner">
-            <div class="layout-editbar-title"><i class="fas fa-table-cells-large"></i><span>Editing <span id="layoutEditName">Layout 1</span></span></div>
-            <div class="layout-editbar-hint">
-                <span>Drag resources, pages and the control area to move them; they snap to the grid. Drag the control area's right edge to change its width.</span>
-                <span id="layoutOverlapWarn" class="layout-editbar-warn hidden"></span>
-            </div>
-            <div class="layout-editbar-actions">
-                <button type="button" class="btn btn-secondary" onclick="autoArrangeLayout()" title="Put everything back in the Default arrangement"><i class="fas fa-wand-magic-sparkles"></i>Auto-Arrange</button>
-                <button type="button" class="btn btn-secondary" onclick="cancelLayoutEdit()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="saveLayoutEdit()"><i class="fas fa-floppy-disk"></i><span id="layoutSaveLabel">Save Layout 1</span></button>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Console -->
-    <main id="consoleMain" class="container mx-auto px-4 py-6">
+    <main class="container mx-auto px-4 py-6">
         <!-- Control Area (v2.6.1): levels, four equal buttons, and a full-width transmit bar -->
-        <div id="masterControls" class="layout-item bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm" data-layout-key="mc">
+        <div id="masterControls" class="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm">
             <div class="mc-top">
                 <!-- Volume Controls (Stacked) + VU Meter -->
                 <div class="mc-levels">
@@ -885,9 +774,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <i class="fas fa-bolt"></i>
                 </span>
             </button>
-
-            <div class="layout-shield" tabindex="0" role="button" aria-label="Move the control area"><span class="layout-grip" aria-hidden="true"><i class="fas fa-up-down-left-right"></i></span></div>
-            <div class="layout-resize" title="Drag to change the control area's width" aria-hidden="true"></div>
         </div>
 
         <!-- Resources Grid -->
@@ -900,25 +786,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <!-- Pages will be populated here -->
         </div>
     </main>
-    <!-- Edit Layout Modal (v2.6.1) -->
-    <div id="layoutModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-        <div class="modal-panel modal-content max-w-md">
-            <div class="p-6">
-                <div class="modal-header">
-                    <div class="min-w-0">
-                        <h2 class="modal-title"><i class="fas fa-table-cells-large"></i><span>Edit Layout</span></h2>
-                        <p class="modal-subtitle">Place resources, pages and the control area anywhere on the screen. Two layouts can be saved and recalled here.</p>
-                    </div>
-                    <button type="button" onclick="hideModal('layoutModal')" class="modal-close" aria-label="Close"><i class="fas fa-times"></i></button>
-                </div>
-                <div id="layoutSlotList" class="space-y-3"></div>
-                <div class="modal-footer">
-                    <button type="button" onclick="hideModal('layoutModal')" class="btn btn-secondary">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Settings Modal -->
     <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
         <div class="modal-panel modal-content max-w-md">
@@ -1842,7 +1709,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <p class="text-sm text-gray-600 dark:text-gray-400">Choose Add Resource from the Console Configuration menu (the monitor-and-gear button at the top of the screen) to create a new resource. In the resource editor, set:</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Resource Name:</strong> An internal label used for identification in logs and settings (e.g., "vhf1" or "uhf1"). This name is not shown on the main screen; the active channel's name is shown there instead.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Color:</strong> Blue, Green, Red or Yellow. The resource shows its color while unselected and turns white with a green border when selected.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Card Size:</strong> Small (the default for a new resource) or Large. A small card is a compact version of the same controls: the frequency and tone share a line, and the volume slider shares its row with Priority, Patch and Edit.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Card Size:</strong> Small (the default for a new resource) or Large. A small card is a compact version of the same controls: the frequency and tone share a line, and the volume slider shares its row with Priority, Patch and Edit. On a wide screen four small cards fit across where three large ones do.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Manage Channels:</strong> Opens the channel list for this resource, where you configure the actual radio settings. A resource cannot be saved until it has at least one channel.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Important: Save a new resource first, then reopen it with the pencil icon on its card and click "Connect to Radio" to connect it.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Saved resources also have a Radio Module section for the radio module's audio filters (see Module Settings). To delete a resource, use Delete Resource at the bottom of the editor.</p>
@@ -1961,7 +1828,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </button>
                         <div id="help-pages" class="hidden px-3 pb-3">
                             <p class="text-sm text-gray-600 dark:text-gray-400">Pages are pre-configured tone sequences used to alert or activate remote equipment such as pagers, station alerting systems, or tone-activated devices. The console supports two page types: DTMF and 2-Tone.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add a page with Add Page in the Console Configuration menu. Page cards display the page name and type in the page's color, chosen in the page editor, at the card size chosen there (Small, the default for a new page, or Large). Single-click a page card to immediately transmit that page on all selected resources. Long-press (hold for 0.5 seconds) to add the page to the transmission stack without sending immediately.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Add a page with Add Page in the Console Configuration menu. Page cards display the page name and type in the page's color, chosen in the page editor, at the card size chosen there (Small, the default for a new page, or Large). Small page tiles are shorter and narrower, so more fit to a row. Single-click a page card to immediately transmit that page on all selected resources. Long-press (hold for 0.5 seconds) to add the page to the transmission stack without sending immediately.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Stacked pages turn white (dark grey in dark mode) with a green border and checkmark, the same way a selected resource does. Use the Paging button in the control area to transmit all stacked pages in sequence.</p>
                         </div>
                     </div>
@@ -2022,7 +1889,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <p class="text-sm text-gray-600 dark:text-gray-400">• The originating resource card pulses with a red border</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400">• The resource is forced to full volume regardless of other settings</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400">• Caller ID displays the unit identifier (with emergency trigger stripped)</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Click "Acknowledge All" in the Emergency panel to silence the alert and return to normal operation. Emergency history is preserved for review.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Click "Acknowledge All" in the Emergency panel to silence the alert and return to normal operation.</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">The Emergency panel keeps the last 10 alerts, with their date and time, even after the console is closed and reopened. An alert that wasn't acknowledged before the console closed still shows as unacknowledged when it reopens (badge count and red card border) so it can be reviewed and acknowledged; the alarm tone doesn't restart on its own. Clear All Configuration in Settings also clears this history.</p>
                         </div>
                     </div>
 
@@ -2037,22 +1905,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Pre-emphasis &amp; de-emphasis:</strong> standard FM voice shaping, with treble boosted on transmit and cut on receive.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>High-pass:</strong> cuts low frequencies, such as sub-audible CTCSS and DCS tones.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Low-pass:</strong> cuts high-frequency hiss above the voice range.</p>
-                        </div>
-                    </div>
-
-                    <!-- Console Layout (v2.6.1) -->
-                    <div class="help-topic border border-gray-200 dark:border-gray-700 rounded-lg">
-                        <button onclick="toggleHelpTopic('help-layout')" class="w-full flex justify-between items-center p-3 text-left font-medium hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg">
-                            <span>Console Layout</span>
-                            <i id="help-layout-icon" class="fas fa-caret-right text-gray-400"></i>
-                        </button>
-                        <div id="help-layout" class="hidden px-3 pb-3">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">The Console Configuration button (a monitor with a gear) at the top of the screen holds Add Resource, Add Page and Edit Layout.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Default</strong> arranges everything automatically: the control area across the top, then the resources, then the pages, wrapping to fit the window. Small cards fit more to a row.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Layout 1 and Layout 2</strong> are arrangements you place yourself. In Edit Layout, choose Create (or Edit) on a layout. The console starts from what's on screen, and every resource, page and the control area gets a dashed outline. Drag them anywhere; they snap to an 8-pixel grid. Drag the control area's right edge to make it wider or narrower; when it's narrow its buttons move under the volume sliders. Anything that overlaps something else is outlined in red. Auto-Arrange puts everything back where Default would. Save keeps the layout and switches to it; Cancel leaves it as it was.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">While you're editing, the on-screen buttons are locked so nothing transmits by accident. Receive audio keeps playing, and the keyboard push-to-talk key still works.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Use Recall in Edit Layout to switch to a saved layout, or Use Default to go back to the automatic one. A resource or page added later goes into the first free spot of the layout in use. Layouts are saved with the rest of the configuration and included in Export.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">An open activity log or channel list in a saved layout opens over whatever is below it, instead of pushing it down.</p>
                         </div>
                     </div>
 
@@ -2082,7 +1934,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <div id="help-keyboard" class="hidden px-3 pb-3">
                             <p class="text-sm text-gray-600 dark:text-gray-400"><strong>Space</strong> (or custom key): Push-to-talk for General Transmit. Press and hold to transmit on all selected resources.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Escape:</strong> Closes the Console Configuration menu or the topmost open window.</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-2"><strong>Arrow keys</strong> (while editing a layout): Move the highlighted item one grid step; hold Shift to move four steps.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Keyboard PTT is automatically disabled when any other settings window or dialog is open, preventing accidental transmissions while configuring the console.</p>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">The PTT key can be customized in Settings. Click "Click to Set Key" and press your desired key to assign it.</p>
                         </div>
@@ -2439,7 +2290,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     let resourceDtmfDecoders = new Map();
 
     // Modal tracking for PTT keybind
-    const modalIds = ['settingsModal', 'aliasesModal', 'aliasEditModal', 'emergencyModal', 'resourceModal', 'manageChannelsModal', 'channelEditModal', 'pageModal', 'confirmModal', 'errorModal', 'successModal', 'helpModal', 'kv4pModuleSubmodal', 'layoutModal'];
+    const modalIds = ['settingsModal', 'aliasesModal', 'aliasEditModal', 'emergencyModal', 'resourceModal', 'manageChannelsModal', 'channelEditModal', 'pageModal', 'confirmModal', 'errorModal', 'successModal', 'helpModal', 'kv4pModuleSubmodal'];
 
     // ============================================================================
     // DTMF DECODER CLASS (Goertzel Algorithm)
@@ -4095,7 +3946,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 if (log) log.scrollTop = scrollPositions[rid];
             }
         });
-        scheduleLayoutExtent();
     }
 
     function createResourceCard(resource) {
@@ -4359,11 +4209,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         }
 
         attachChannelDropdownGuard(card, resource.id);
-        decorateLayoutItem(card, 'r' + resource.id, {
-            raised: isExpanded,
-            top: expandedChannelDropdowns.has(resource.id),
-            label: activeChannel ? activeChannel.name : resource.name
-        });
 
         return card;
     }
@@ -5174,7 +5019,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         pages.forEach(page => {
             grid.appendChild(createPageCard(page));
         });
-        scheduleLayoutExtent();
     }
 
     function createPageCard(page) {
@@ -5228,7 +5072,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             </div>
         `;
         }
-        decorateLayoutItem(card, 'p' + page.id, { label: page.name });
 
         // Page press handlers
         card.addEventListener('mousedown', (e) => {
@@ -7380,6 +7223,28 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     // EMERGENCY SYSTEM
     // ============================================================================
 
+    // Saved emergency history, read back safely (newest first, at most 10).
+    function sanitizeEmergencyEvents(raw) {
+        if (!Array.isArray(raw)) return [];
+        return raw.filter(e => e && Number.isFinite(Number(e.id)) && Number.isFinite(Number(e.timestamp)))
+            .map(e => ({
+                id: Number(e.id),
+                resourceId: Number(e.resourceId),
+                resourceName: String(e.resourceName || ''),
+                channelName: String(e.channelName || e.resourceName || ''),
+                callerId: String(e.callerId || 'Unknown'),
+                timestamp: Number(e.timestamp),
+                acknowledged: e.acknowledged === true
+            }))
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .slice(0, 10);
+    }
+
+    function formatEmergencyTime(ts) {
+        const d = new Date(ts);
+        return `${d.toLocaleDateString()} · ${d.toLocaleTimeString()}`;
+    }
+
     function triggerEmergency(resourceId, callerId) {
         const resource = resources.find(r => r.id === resourceId);
         if (!resource) return;
@@ -7411,7 +7276,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         startEmergencyWhoop();
         updateEmergencyUI();
         renderResources();
-        
+        saveToLocalStorage();               // v2.6.1: history is kept between sessions
     }
 
     function updateEmergencyUI() {
@@ -7454,7 +7319,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 <div class="flex-1 min-w-0">
                     <div class="text-sm font-medium ${!event.acknowledged ? 'text-red-500' : ''}">${escapeHtml(event.channelName || event.resourceName)}</div>
                     <div class="text-xs text-gray-500">
-                        ${escapeHtml(event.callerId)} • ${new Date(event.timestamp).toLocaleTimeString()}
+                        ${escapeHtml(event.callerId)} • ${formatEmergencyTime(event.timestamp)}
                     </div>
                 </div>
                 <button onclick="deleteEmergencyEvent(${event.id})" 
@@ -7485,7 +7350,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
         updateEmergencyUI();
         renderResources();
-        
+        saveToLocalStorage();
     }
 
     function deleteEmergencyEvent(eventId) {
@@ -7505,6 +7370,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
             updateEmergencyUI();
             renderResources();
+            saveToLocalStorage();
         }
     }
 
@@ -8280,7 +8146,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     }
 
     function exportConfiguration() {
-        pruneLayoutProfiles();
         const config = {
             version: 'v2.6.1',
             exportDate: new Date().toISOString(),
@@ -8320,9 +8185,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             nextResourceId,
             nextChannelId,
             pages,
-            nextPageId,
-            layoutProfiles,
-            activeLayout
+            nextPageId
         };
 
         const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
@@ -8374,9 +8237,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 if (config.nextAliasId) nextAliasId = config.nextAliasId;
                 if (config.pages) pages = config.pages;
                 if (config.nextPageId) nextPageId = config.nextPageId;
-                if (layoutEdit) { stopLayoutDrag(); layoutEdit = null; }
-                layoutProfiles = sanitizeLayoutProfiles(config.layoutProfiles);
-                activeLayout = restoreActiveLayout(config.activeLayout);
 
                 if (config.resources) {
                     // Disconnect existing resources properly first (a bare port.close() fails while
@@ -8411,7 +8271,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 
                 // Save and refresh
                 saveToLocalStorage();
-                refreshLayout();
+                renderResources();
+                renderPages();
                 populateSettingsForm();
 
                 console.log('Configuration imported successfully from:', config.exportDate || 'unknown date');
@@ -8467,15 +8328,17 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 carriedSettings = {};
                 radioAliases = [];
                 nextAliasId = 1;
+                emergencyEvents = [];
+                nextEmergencyId = 1;
+                activeEmergencyResourceIds.clear();
+                stopEmergencyWhoop();
+                updateEmergencyUI();
                 resources = [];
                 patchedResources = [];
                 nextResourceId = 1;
                 nextChannelId = 1;
                 pages = [];
                 nextPageId = 1;
-                if (layoutEdit) { stopLayoutDrag(); layoutEdit = null; }
-                layoutProfiles = [null, null];
-                activeLayout = 0;
 
                 // Update clock display
                 updateClockDisplay();
@@ -8483,7 +8346,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 // Update UI
                 applyTheme();
                 document.getElementById('consoleTitle').textContent = consoleName;
-                refreshLayout();
+                renderResources();
+                renderPages();
                 populateSettingsForm();
 
                 console.log('Configuration cleared');
@@ -8591,25 +8455,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     }
 
     // ============================================================================
-    // CONSOLE LAYOUT (v2.6.1)
+    // CARD SIZES AND CONSOLE CONFIGURATION MENU (v2.6.1)
     // ============================================================================
-    // Default: the flowing arrangement. Layout 1 / Layout 2: every resource ('r<id>'), page
-    // ('p<id>') and the control area ('mc') sits at a saved x/y on an 8px grid, measured from
-    // the top-left corner of the console area under the header.
-
-    const LAYOUT_GRID = 8;
-    const LAYOUT_GAP = 16;
-    const LAYOUT_CONTROL_MIN_W = 320;
-    const LAYOUT_CONTROL_DEFAULT_W = 640;
-    // Width and height of each card size in a saved layout (matches the layout-custom CSS).
-    const LAYOUT_NOMINAL = { rlarge: [400, 224], rsmall: [296, 152], plarge: [144, 168], psmall: [104, 96] };
-
-    let layoutProfiles = [null, null];   // Layout 1, Layout 2: { items: { key: {x, y} }, controlWidth, savedAt }
-    let activeLayout = 0;                // 0 = Default, 1 or 2 = that saved layout is in use
-    let layoutEdit = null;               // while editing: { slot, items, controlWidth }
-    let layoutDrag = null;
-    let layoutExtentRaf = 0;
-    let layoutSaveTimer = null;
 
     // Card size, set per resource and per page in their editors. New ones start Small (as new
     // ones start Blue); a card saved before sizes existed (no size stored) stays Large, so an
@@ -8624,368 +8471,12 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         });
     }
 
-    function layoutName(slot) { return slot ? `Layout ${slot}` : 'Default'; }
-    function snapLayout(v) { return Math.max(0, Math.round(v / LAYOUT_GRID) * LAYOUT_GRID); }
-    function cloneLayout(v) { return JSON.parse(JSON.stringify(v)); }
-
-    // The arrangement on screen: the one being edited, the saved one in use, or null (Default).
-    function currentLayout() {
-        if (layoutEdit) return layoutEdit;
-        return activeLayout ? layoutProfiles[activeLayout - 1] : null;
-    }
-
-    function sanitizeLayoutProfiles(raw) {
-        const out = [null, null];
-        if (!Array.isArray(raw)) return out;
-        for (let i = 0; i < 2; i++) {
-            const p = raw[i];
-            if (!p || typeof p !== 'object' || !p.items || typeof p.items !== 'object') continue;
-            const items = {};
-            Object.keys(p.items).forEach(k => {
-                const pos = p.items[k];
-                if (!/^(mc|r\d+|p\d+)$/.test(k) || !pos) return;
-                const x = Number(pos.x), y = Number(pos.y);
-                if (Number.isFinite(x) && Number.isFinite(y)) items[k] = { x: snapLayout(x), y: snapLayout(y) };
-            });
-            const w = Number(p.controlWidth);
-            out[i] = {
-                items,
-                controlWidth: Number.isFinite(w) ? Math.max(LAYOUT_CONTROL_MIN_W, snapLayout(w)) : LAYOUT_CONTROL_DEFAULT_W,
-                savedAt: Number(p.savedAt) || Date.now()
-            };
-        }
-        return out;
-    }
-
-    function restoreActiveLayout(n) {
-        return (n === 1 || n === 2) && layoutProfiles[n - 1] ? n : 0;
-    }
-
-    // Forget the positions of resources and pages that no longer exist.
-    function pruneLayoutProfiles() {
-        const keep = new Set(['mc', ...resources.map(r => 'r' + r.id), ...pages.map(p => 'p' + p.id)]);
-        [layoutProfiles[0], layoutProfiles[1], layoutEdit].forEach(l => {
-            if (!l || !l.items) return;
-            Object.keys(l.items).forEach(k => { if (!keep.has(k)) delete l.items[k]; });
-        });
-    }
-
-    // Width and height an item takes up in a layout (used to find room for a new one).
-    function layoutItemSize(key, lay) {
-        if (key === 'mc') {
-            const mc = document.getElementById('masterControls');
-            return [lay.controlWidth || LAYOUT_CONTROL_DEFAULT_W, Math.max(mc ? mc.offsetHeight : 0, 200)];
-        }
-        if (key[0] === 'r') {
-            const r = resources.find(x => 'r' + x.id === key);
-            return LAYOUT_NOMINAL['r' + cardSizeKey(r && r.cardSize)];
-        }
-        const p = pages.find(x => 'p' + x.id === key);
-        return LAYOUT_NOMINAL['p' + cardSizeKey(p && p.cardSize)];
-    }
-
-    // First free spot, top to bottom and left to right, beside or under what is already placed.
-    function findFreeLayoutSpot(key, lay) {
-        const [w, h] = layoutItemSize(key, lay);
-        const placed = Object.keys(lay.items).filter(k => k !== key).map(k => {
-            const [iw, ih] = layoutItemSize(k, lay);
-            return { x: lay.items[k].x, y: lay.items[k].y, w: iw, h: ih };
-        });
-        const limit = Math.max(w + 2 * LAYOUT_GAP, document.documentElement.clientWidth - LAYOUT_GAP);
-        const uniq = a => [...new Set(a.map(snapLayout))].sort((m, n) => m - n);
-        const xs = uniq([LAYOUT_GAP, ...placed.map(o => o.x + o.w + LAYOUT_GAP)]);
-        const ys = uniq([LAYOUT_GAP, ...placed.map(o => o.y + o.h + LAYOUT_GAP)]);
-        const fits = (x, y) => placed.every(o =>
-            x + w + LAYOUT_GAP <= o.x || o.x + o.w + LAYOUT_GAP <= x || y + h + LAYOUT_GAP <= o.y || o.y + o.h + LAYOUT_GAP <= y);
-        for (const y of ys) {
-            for (const x of xs) {
-                if (x + w <= limit && fits(x, y)) return { x, y };
-            }
-        }
-        const bottom = placed.reduce((m, o) => Math.max(m, o.y + o.h), 0);
-        return { x: LAYOUT_GAP, y: snapLayout(bottom + LAYOUT_GAP) };
-    }
-
-    // Where key sits in the current layout. Something new (a resource or page added after the
-    // layout was saved) is given the first free spot, and that spot is kept.
-    function layoutPos(key) {
-        const lay = currentLayout();
-        if (!lay) return null;
-        if (!lay.items) lay.items = {};
-        if (!lay.items[key]) {
-            lay.items[key] = findFreeLayoutSpot(key, lay);
-            if (!layoutEdit) scheduleLayoutSave();
-        }
-        return lay.items[key];
-    }
-
-    function scheduleLayoutSave() {
-        if (layoutSaveTimer) return;
-        layoutSaveTimer = setTimeout(() => { layoutSaveTimer = null; saveToLocalStorage(); }, 0);
-    }
-
-    // Called for each resource and page card as it is built.
-    function decorateLayoutItem(el, key, opts = {}) {
-        el.classList.add('layout-item');
-        el.dataset.layoutKey = key;
-        const pos = layoutPos(key);
-        if (!pos) return;
-        el.style.left = pos.x + 'px';
-        el.style.top = pos.y + 'px';
-        if (opts.raised) el.classList.add('layout-raised');       // open activity log goes over its neighbours
-        if (opts.top) el.classList.add('layout-raised-top');      // open channel list, above that
-        if (layoutEdit) {
-            // While editing, the card's own controls are locked; a shield on top takes the drag.
-            [...el.children].forEach(c => { c.inert = true; });
-            el.appendChild(makeLayoutShield(opts.label || ''));
-            if (layoutDrag && layoutDrag.key === key) el.classList.add('layout-dragging');
-        }
-    }
-
-    function makeLayoutShield(label) {
-        const sh = document.createElement('div');
-        sh.className = 'layout-shield';
-        sh.tabIndex = 0;
-        sh.setAttribute('role', 'button');
-        sh.setAttribute('aria-label', `Move ${label}`);
-        sh.innerHTML = '<span class="layout-grip" aria-hidden="true"><i class="fas fa-up-down-left-right"></i></span>';
-        return sh;
-    }
-
-    function layoutItemEls() { return [...document.querySelectorAll('#consoleMain .layout-item')]; }
-    function layoutItemEl(key) { return document.querySelector(`#consoleMain .layout-item[data-layout-key="${key}"]`); }
-
-    // Put the control area where the current layout says, switch the page between Default and
-    // a placed layout, and show or hide the Edit Layout bar. Cards place themselves as they are
-    // built, so call refreshLayout() when the layout itself changes.
-    function applyLayout() {
-        const lay = currentLayout();
-        document.body.classList.toggle('layout-custom', !!lay);
-        document.body.classList.toggle('layout-editing', !!layoutEdit);
-        const mc = document.getElementById('masterControls');
-        if (lay) {
-            const pos = layoutPos('mc');
-            mc.style.left = pos.x + 'px';
-            mc.style.top = pos.y + 'px';
-            mc.style.width = (lay.controlWidth || LAYOUT_CONTROL_DEFAULT_W) + 'px';
-        } else {
-            mc.style.left = mc.style.top = mc.style.width = '';
-        }
-        [...mc.children].forEach(c => {
-            if (!c.classList.contains('layout-shield') && !c.classList.contains('layout-resize')) c.inert = !!layoutEdit;
-        });
-        if (!layoutEdit) mc.classList.remove('layout-overlap', 'layout-dragging');
-        document.getElementById('layoutEditBar').classList.toggle('hidden', !layoutEdit);
-        if (layoutEdit) {
-            document.getElementById('layoutEditName').textContent = layoutName(layoutEdit.slot);
-            document.getElementById('layoutSaveLabel').textContent = `Save ${layoutName(layoutEdit.slot)}`;
-        }
-        updateConfigMenuState();
-        scheduleLayoutExtent();
-    }
-
-    function refreshLayout() {
-        applyLayout();
-        renderResources();
-        renderPages();
-    }
-
-    function scheduleLayoutExtent() {
-        if (layoutExtentRaf) return;
-        layoutExtentRaf = requestAnimationFrame(() => { layoutExtentRaf = 0; updateLayoutExtent(); });
-    }
-
-    // Placed items don't take up space on their own, so size the console area to hold them
-    // (with room to drag further down while editing), and outline overlaps while editing.
-    function updateLayoutExtent() {
-        const main = document.getElementById('consoleMain');
-        if (!currentLayout()) {
-            main.style.minHeight = '';
-            main.style.minWidth = '';
-            return;
-        }
-        let right = 0, bottom = 0;
-        const boxes = layoutItemEls().map(el => {
-            const b = { el, x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
-            right = Math.max(right, b.x + b.w);
-            bottom = Math.max(bottom, b.y + b.h);
-            return b;
-        });
-        main.style.minHeight = (layoutEdit
-            ? Math.max(bottom + 320, window.innerHeight - main.offsetTop)
-            : bottom + 24) + 'px';
-        // Only as wide as the furthest item, so something placed at the window's edge doesn't
-        // add a sideways scrollbar.
-        main.style.minWidth = right + 'px';
-        if (layoutEdit) markLayoutOverlaps(boxes);
-    }
-
-    function markLayoutOverlaps(boxes) {
-        const hit = new Set();
-        for (let i = 0; i < boxes.length; i++) {
-            for (let j = i + 1; j < boxes.length; j++) {
-                const a = boxes[i], b = boxes[j];
-                if (a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h) {
-                    hit.add(a.el);
-                    hit.add(b.el);
-                }
-            }
-        }
-        boxes.forEach(b => b.el.classList.toggle('layout-overlap', hit.has(b.el)));
-        const warn = document.getElementById('layoutOverlapWarn');
-        warn.textContent = hit.size ? ` ${hit.size} items overlap (outlined in red).` : '';
-        warn.classList.toggle('hidden', !hit.size);
-    }
-
-    // Positions of the Default arrangement at the current window size. Placed positions are
-    // ignored by Default (see the CSS), so this only has to switch the class off to measure.
-    function measureDefaultLayout() {
-        const body = document.body;
-        const main = document.getElementById('consoleMain');
-        const hadCustom = body.classList.contains('layout-custom');
-        body.classList.remove('layout-custom');
-        // The size given to a placed layout would stretch Default's centred column; drop it
-        // while measuring (the next extent update puts it back).
-        main.style.minWidth = '';
-        main.style.minHeight = '';
-        scheduleLayoutExtent();
-        const mainTop = main.getBoundingClientRect().top;
-        const items = {};
-        layoutItemEls().forEach(el => {
-            const r = el.getBoundingClientRect();
-            items[el.dataset.layoutKey] = { x: snapLayout(r.left + window.scrollX), y: snapLayout(r.top - mainTop) };
-        });
-        const controlWidth = Math.max(LAYOUT_CONTROL_MIN_W,
-            snapLayout(document.getElementById('masterControls').getBoundingClientRect().width));
-        if (hadCustom) body.classList.add('layout-custom');
-        return { items, controlWidth };
-    }
-
-    function startLayoutEdit(slot) {
-        if (layoutEdit) return;
-        hideModal('layoutModal');
-        closeConfigMenu();
-        if (expandedChannelDropdowns.size) expandedChannelDropdowns.clear();
-        if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
-        // Start from the saved layout, or else from whatever is on screen now.
-        const saved = layoutProfiles[slot - 1];
-        const cur = currentLayout();
-        const base = saved ? cloneLayout(saved)
-            : cur ? { items: cloneLayout(cur.items || {}), controlWidth: cur.controlWidth }
-            : measureDefaultLayout();
-        layoutEdit = { slot, items: base.items || {}, controlWidth: base.controlWidth || LAYOUT_CONTROL_DEFAULT_W };
-        refreshLayout();
-    }
-
-    function endLayoutEdit() {
-        stopLayoutDrag();
-        layoutEdit = null;
-        refreshLayout();
-    }
-
-    function saveLayoutEdit() {
-        if (!layoutEdit) return;
-        const slot = layoutEdit.slot;
-        layoutProfiles[slot - 1] = { items: cloneLayout(layoutEdit.items), controlWidth: layoutEdit.controlWidth, savedAt: Date.now() };
-        activeLayout = slot;
-        endLayoutEdit();
-        saveToLocalStorage();
-    }
-
-    function cancelLayoutEdit() {
-        if (layoutEdit) endLayoutEdit();
-    }
-
-    // Put everything back where the Default arrangement would have it.
-    function autoArrangeLayout() {
-        if (!layoutEdit) return;
-        const m = measureDefaultLayout();
-        layoutEdit.items = m.items;
-        layoutEdit.controlWidth = m.controlWidth;
-        refreshLayout();
-    }
-
-    function useLayout(slot) {
-        if (layoutEdit) return;
-        if (slot && !layoutProfiles[slot - 1]) return;
-        activeLayout = slot;
-        refreshLayout();
-        saveToLocalStorage();
-        renderLayoutMenu();
-    }
-
-    function clearLayoutSlot(slot) {
-        if (!layoutProfiles[slot - 1]) return;
-        const note = activeLayout === slot ? ' The console goes back to the Default layout.' : '';
-        showConfirmDialog(`Delete ${layoutName(slot)}?`, `${layoutName(slot)} will be deleted.${note}`, () => {
-            layoutProfiles[slot - 1] = null;
-            if (activeLayout === slot) {
-                activeLayout = 0;
-                refreshLayout();
-            }
-            saveToLocalStorage();
-            renderLayoutMenu();
-        });
-    }
-
-    function formatLayoutSaved(ts) {
-        const d = new Date(ts);
-        return `Saved ${d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}, ` +
-               d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
-    }
-
-    function renderLayoutMenu() {
-        const inUse = '<span class="layout-badge"><i class="fas fa-check"></i>In use</span>';
-        let html = `
-            <div class="layout-slot ${activeLayout === 0 ? 'is-active' : ''}" data-layout-slot="0">
-                <div class="layout-slot-head">
-                    <div class="min-w-0">
-                        <div class="layout-slot-name">Default</div>
-                        <div class="layout-slot-meta">Arranged automatically to fit the window.</div>
-                    </div>
-                    ${activeLayout === 0 ? inUse : '<button type="button" class="btn btn-secondary" onclick="useLayout(0)">Use Default</button>'}
-                </div>
-            </div>`;
-        [1, 2].forEach(slot => {
-            const p = layoutProfiles[slot - 1];
-            const active = activeLayout === slot;
-            const name = layoutName(slot);
-            html += `
-            <div class="layout-slot ${active ? 'is-active' : ''}" data-layout-slot="${slot}">
-                <div class="layout-slot-head">
-                    <div class="min-w-0">
-                        <div class="layout-slot-name">${name}</div>
-                        <div class="layout-slot-meta">${p ? formatLayoutSaved(p.savedAt) : 'Not saved yet'}</div>
-                    </div>
-                    ${active ? inUse : ''}
-                </div>
-                <div class="layout-slot-actions">
-                    ${p ? `
-                    ${active ? '' : `<button type="button" class="btn btn-secondary" onclick="useLayout(${slot})"><i class="fas fa-folder-open"></i>Recall</button>`}
-                    <button type="button" class="btn btn-primary" onclick="startLayoutEdit(${slot})"><i class="fas fa-pen"></i>Edit</button>
-                    <button type="button" class="btn btn-secondary btn-icon" onclick="clearLayoutSlot(${slot})" title="Delete ${name}" aria-label="Delete ${name}"><i class="fas fa-trash"></i></button>
-                    ` : `
-                    <button type="button" class="btn btn-primary" onclick="startLayoutEdit(${slot})"><i class="fas fa-plus"></i>Create ${name}</button>`}
-                </div>
-            </div>`;
-        });
-        document.getElementById('layoutSlotList').innerHTML = html;
-    }
-
-    function openLayoutMenu() {
-        closeConfigMenu();
-        if (layoutEdit) return;
-        renderLayoutMenu();
-        showModal('layoutModal');
-    }
-
-    // Console Configuration menu in the header
+    // Console Configuration menu in the header: Add Resource and Add Page
     function toggleConfigMenu(force) {
         const menu = document.getElementById('consoleConfigMenu');
         const open = force !== undefined ? force : menu.classList.contains('hidden');
         menu.classList.toggle('hidden', !open);
         document.getElementById('consoleConfigBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
-        if (open) updateConfigMenuState();
     }
 
     function closeConfigMenu() {
@@ -8995,130 +8486,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         return true;
     }
 
-    function updateConfigMenuState() {
-        document.getElementById('configMenuLayoutName').textContent = layoutEdit ? 'Editing' : layoutName(activeLayout);
-        document.getElementById('editLayoutBtn').disabled = !!layoutEdit;
-    }
-
-    // Dragging (mouse, pen or touch) and arrow-key nudging while editing
-    function onLayoutPointerDown(e) {
-        if (!layoutEdit || layoutDrag) return;
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-        const handle = e.target.closest('.layout-shield, .layout-resize');
-        const el = handle && handle.closest('.layout-item');
-        if (!el) return;
-        e.preventDefault();
-        const key = el.dataset.layoutKey;
-        const pos = layoutPos(key);
-        layoutDrag = {
-            key,
-            pointerId: e.pointerId,
-            mode: handle.classList.contains('layout-resize') ? 'resize' : 'move',
-            startX: e.clientX + window.scrollX,
-            startY: e.clientY + window.scrollY,
-            x0: pos.x,
-            y0: pos.y,
-            w0: layoutEdit.controlWidth
-        };
-        el.classList.add('layout-dragging');
-        try { handle.setPointerCapture(e.pointerId); } catch (_) { /* element may be gone */ }
-        window.addEventListener('pointermove', onLayoutPointerMove);
-        window.addEventListener('pointerup', onLayoutPointerUp);
-        window.addEventListener('pointercancel', onLayoutPointerUp);
-    }
-
-    function onLayoutPointerMove(e) {
-        if (!layoutDrag || !layoutEdit || e.pointerId !== layoutDrag.pointerId) return;
-        const dx = e.clientX + window.scrollX - layoutDrag.startX;
-        const dy = e.clientY + window.scrollY - layoutDrag.startY;
-        const el = layoutItemEl(layoutDrag.key);
-        if (layoutDrag.mode === 'resize') {
-            const w = Math.max(LAYOUT_CONTROL_MIN_W, snapLayout(layoutDrag.w0 + dx));
-            if (w !== layoutEdit.controlWidth) {
-                layoutEdit.controlWidth = w;
-                if (el) el.style.width = w + 'px';
-                scheduleLayoutExtent();
-            }
-            return;
-        }
-        const pos = layoutEdit.items[layoutDrag.key];
-        const x = snapLayout(layoutDrag.x0 + dx);
-        const y = snapLayout(layoutDrag.y0 + dy);
-        if (!pos || (x === pos.x && y === pos.y)) return;
-        pos.x = x;
-        pos.y = y;
-        if (el) {
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
-        }
-        scheduleLayoutExtent();
-    }
-
-    function onLayoutPointerUp(e) {
-        if (!layoutDrag || (e && e.pointerId !== layoutDrag.pointerId)) return;
-        stopLayoutDrag();
-    }
-
-    function stopLayoutDrag() {
-        window.removeEventListener('pointermove', onLayoutPointerMove);
-        window.removeEventListener('pointerup', onLayoutPointerUp);
-        window.removeEventListener('pointercancel', onLayoutPointerUp);
-        if (!layoutDrag) return;
-        const el = layoutItemEl(layoutDrag.key);
-        if (el) el.classList.remove('layout-dragging');
-        layoutDrag = null;
-        scheduleLayoutExtent();
-    }
-
-    function onLayoutKeyDown(e) {
-        if (!layoutEdit) return;
-        const sh = e.target.closest && e.target.closest('.layout-shield');
-        if (!sh) return;
-        const step = e.shiftKey ? LAYOUT_GRID * 4 : LAYOUT_GRID;
-        const d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
-        if (!d) return;
-        e.preventDefault();
-        e.stopPropagation();
-        const el = sh.closest('.layout-item');
-        const pos = layoutPos(el.dataset.layoutKey);
-        pos.x = snapLayout(pos.x + d[0]);
-        pos.y = snapLayout(pos.y + d[1]);
-        el.style.left = pos.x + 'px';
-        el.style.top = pos.y + 'px';
-        scheduleLayoutExtent();
-    }
-
-    function initLayoutEditing() {
-        const main = document.getElementById('consoleMain');
-        main.addEventListener('pointerdown', onLayoutPointerDown);
-        main.addEventListener('keydown', onLayoutKeyDown);
-        // While editing, nothing inside a card or the control area reacts to a press: no
-        // transmit, no page, no selection. The shields take the drag; this stops everything
-        // else, including the card's own touch and mouse handlers under a shield.
-        ['mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu', 'touchstart', 'touchend'].forEach(type => {
-            document.addEventListener(type, (e) => {
-                if (!layoutEdit || !e.target.closest || !e.target.closest('#consoleMain .layout-item')) return;
-                e.stopPropagation();
-                if (e.cancelable) e.preventDefault();
-            }, { capture: true, passive: false });
-        });
-        document.addEventListener('pointerdown', (e) => {
-            if (!layoutEdit || !e.target.closest) return;
-            if (e.target.closest('#consoleMain .layout-item') && !e.target.closest('.layout-shield, .layout-resize')) {
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        }, true);
-        window.addEventListener('resize', scheduleLayoutExtent);
-    }
-
     // ============================================================================
     // LOCAL STORAGE
     // ============================================================================
 
     function saveToLocalStorage() {
-        pruneLayoutProfiles();
         const data = {
+            emergencyEvents,
+            nextEmergencyId,
             consoleName,
             currentTheme,
             showClock,
@@ -9155,9 +8530,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
             nextResourceId,
             nextChannelId,
             pages,
-            nextPageId,
-            layoutProfiles,
-            activeLayout
+            nextPageId
         };
 
         try {
@@ -9224,8 +8597,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
                 nextPageId = data.nextPageId || 1;
             }
 
-            layoutProfiles = sanitizeLayoutProfiles(data.layoutProfiles);
-            activeLayout = restoreActiveLayout(data.activeLayout);
+            // Emergency history (v2.6.1). An alert that was never acknowledged comes back
+            // unacknowledged (badge, red card border) so it isn't missed; the alarm tone
+            // doesn't restart on its own.
+            emergencyEvents = sanitizeEmergencyEvents(data.emergencyEvents);
+            nextEmergencyId = emergencyEvents.reduce((m, e) => Math.max(m, e.id + 1), Math.max(1, Number(data.nextEmergencyId) || 1));
+            activeEmergencyResourceIds = new Set(emergencyEvents
+                .filter(e => !e.acknowledged && resources.some(r => r.id === e.resourceId))
+                .map(e => e.resourceId));
 
         } catch (e) {
             console.error('Failed to load from localStorage:', e);
@@ -9293,10 +8672,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         alert2Btn.addEventListener('touchstart', (e) => { e.preventDefault(); pointerPttDown('alert2', () => { initAudioContext(); startAlertTone2(); }); }, { passive: false });
         alert2Btn.addEventListener('touchend', (e) => { e.preventDefault(); pointerPttUp('alert2', stopAlertTone2); }, { passive: false });
 
-        // Console Configuration menu (v2.6.1): Add Resource, Add Page, Edit Layout
+        // Console Configuration menu (v2.6.1): Add Resource, Add Page
         document.getElementById('addResourceBtn').addEventListener('click', addResource);
         document.getElementById('addPageBtn').addEventListener('click', addPage);
-        document.getElementById('editLayoutBtn').addEventListener('click', openLayoutMenu);
         document.getElementById('consoleConfigBtn').addEventListener('click', (e) => { e.stopPropagation(); toggleConfigMenu(); });
         document.getElementById('consoleConfigMenu').addEventListener('click', (e) => {
             if (e.target.closest('.config-menu-item')) closeConfigMenu();
@@ -9304,7 +8682,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#consoleConfigWrap')) closeConfigMenu();
         });
-        initLayoutEditing();
 
         // Modal buttons
         document.getElementById('settingsBtn').addEventListener('click', () => { populateSettingsForm(); updateStorageIndicator(); showModal('settingsModal'); });
@@ -9418,7 +8795,9 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         initUI();
         initEventListeners();
         updateClockDisplay();
-        refreshLayout();
+        renderResources();
+        renderPages();
+        updateEmergencyUI();    // restored emergency history: badge and list
         loadRecordingsFromDB(); // restore persisted activity-log recordings
 
         console.log('Common Dispatch Console v2.6.1 initialized');
