@@ -20,11 +20,9 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Per-resource volume control with stereo panning (selected left, unselected right)
 - Four resource colors (Blue, Green, Red, Yellow); a selected resource turns white (dark grey in dark mode) with a green border, and an active emergency turns the border red
 
-### Console Layout
-- Console Configuration menu (the monitor-and-gear button in the header) holds Add Resource, Add Page and Edit Layout
-- Small or Large card size for each resource and page (new ones start Small); small cards are the compact phone-style cards, so more fit on screen
-- Edit Layout: drag resources, pages and the control area anywhere on the screen, snapping to an 8-pixel grid, and drag the control area's edge to resize it
-- Two saved layouts (Layout 1 and Layout 2) to recall at any time, plus the automatic Default layout
+### Console Setup
+- Console Configuration menu (the monitor-and-gear button in the header) holds Add Resource and Add Page
+- Small or Large card size for each resource and page (new ones start Small); small cards are compact, so four resources fit across a wide screen instead of three, and small page tiles fit more to a row
 - Control area with equal-size Mute, Paging and Alert buttons and a full-width transmit bar
 
 ### Channels
@@ -51,6 +49,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - DTMF paging support
 - Emergency alert detection with configurable trigger codes
 - Visual and audible emergency notifications (alerts show the channel the call came in on)
+- Emergency alert history (the last 10, with date and time) is kept when the console is closed and reopened
 - Priority tone transmission
 - Pages use the same four colors as resources
 
@@ -121,12 +120,9 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 - Click the channel dropdown to switch; you can open a resource's Activity Log while the dropdown is open to check which channel traffic arrived on
 - Manage channels (add, edit, reorder, delete) from the resource's channel manager
 
-### Arranging the Console
+### Card Sizes
 - Pick Small (the default) or Large for each resource and page in its editor
-- Open Console Configuration → Edit Layout, then Create (or Edit) Layout 1 or Layout 2
-- Drag items into place (they snap to the grid); anything overlapping is outlined in red; Auto-Arrange puts everything back in the Default arrangement
-- Save to keep the layout and switch to it; Recall switches between saved layouts, and Use Default goes back to the automatic one
-- On-screen buttons are locked while you're editing, so nothing transmits by accident; receive audio and keyboard PTT keep working
+- Mix sizes freely: small and large cards share the same rows
 
 ### Channel Patching
 - Click the link icon on two resources to patch them together
@@ -141,7 +137,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
 ### Emergency Alerts
 - Configure the emergency trigger DTMF code in settings (e.g., "911")
 - When detected, the resource flashes red and an alert tone plays; the alert shows the channel it came in on
-- Click the emergency icon in the header to view/acknowledge alerts
+- Click the emergency icon in the header to view/acknowledge alerts; the history stays after the console is closed, and an alert that was never acknowledged still shows as open
 
 ## Configuration
 
@@ -170,7 +166,7 @@ A web-based multi-resource dispatch console for KV4P-HT amateur radio hardware. 
   - **Bandwidth**: Narrow (12.5 kHz) or Wide (25 kHz)
 
 ### Import/Export
-- Export your complete configuration (resources, channels, aliases, pages, layouts, settings) as JSON
+- Export your complete configuration (resources, channels, aliases, pages, card sizes, settings) as JSON
 - Import configuration on another browser/computer
 - Great for backup or sharing setups with others
 
